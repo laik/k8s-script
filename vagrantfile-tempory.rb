@@ -35,8 +35,8 @@ systemctl stop firewalld.service
 
 yum install wget -y
 
-# 更新阿里云repo
-wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo
+# 使用163的centos repo
+wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.163.com/.help/CentOS7-Base-163.repo
 yum makecache
 
 
@@ -98,7 +98,7 @@ echo 'Environment="KUBELET_EXTRA_ARGS=--fail-swap-on=false"' > /etc/systemd/syst
 systemctl daemon-reload
 systemctl enable kubelet && systemctl start kubelet
 
-curl -Ss https://raw.githubusercontent.com/laik/k8s-script/master/k8s-dev.sh | sh
+
 
 SCRIPT
 
@@ -118,6 +118,6 @@ Vagrant.configure("2") do |config|
                         config.vm.provision "shell",inline: $IPADDR
                         config.vm.provision "shell",inline: $DEFAULTSETTING
              end
-             config.vm.synced_folder "/root/virtual/dxp/tmp","/vagrant", type: "nfs",nfs: true,linux__nfs_options: ['rw','no_subtree_check','all_squash','async']
+             config.vm.synced_folder "tmp","/vagrant", type: "nfs",nfs: true,linux__nfs_options: ['rw','no_subtree_check','all_squash','async']
         end
 end

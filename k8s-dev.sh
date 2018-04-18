@@ -3,6 +3,8 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
+USERNAME=asan
+PASSWORD=!@#@!DSADSA
 
 KUBE_VERSION=v1.10.1
 KUBE_PAUSE_VERSION=3.1
@@ -11,10 +13,9 @@ DNS_VERSION=1.14.4
 DASHBOARD_VERSION=v1.8.3
 ADDON_VERSION=v8.6
 
-
 GCR_URL=k8s.gcr.io
-ALIYUN_URL=registry.cn-hangzhou.aliyuncs.com/etrans
-
+REGISTRY=registry.cn-hangzhou.aliyuncs.com
+ALIYUN_URL=${REGISTRY}/etrans
 
 images=(
 kube-proxy-amd64:${KUBE_VERSION}
@@ -30,7 +31,7 @@ kubernetes-dashboard-amd64:${DASHBOARD_VERSION}
 kube-addon-manager:${ADDON_VERSION}
 )
 
-
+docker login --username=${USERNAME} --password=${PASSWORD} ${REGISTRY}
 
 for imageName in ${images[@]} ; do
   docker pull $ALIYUN_URL/$imageName
