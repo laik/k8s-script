@@ -7,7 +7,7 @@
 # you're doing.
 
 
-# wget -O Vgrantfile https://raw.githubusercontent.com/laik/k8s-script/maste/vagrantfile-temporary.rb
+# wget -O Vagrantfile https://raw.githubusercontent.com/laik/k8s-script/master/vgrantfile-tempory.rb
 
 
 KubernetesHosts = {
