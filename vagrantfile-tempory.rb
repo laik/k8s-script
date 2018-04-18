@@ -33,7 +33,6 @@ sudo -i
 systemctl disable firewalld.service
 systemctl stop firewalld.service
 
-# install go git
 yum install wget -y
 
 # 更新阿里云repo
@@ -41,14 +40,15 @@ wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-
 yum makecache
 
 
-yum install git lsof -y
+## delete install git
+# yum install git lsof -y 
 
 echo "关闭Selinux"
 setenforce  0
 echo 'sed -i "s/^SELINUX=enforcing/SELINUX=disabled/g" /etc/sysconfig/selinux
 sed -i "s/^SELINUX=enforcing/SELINUX=disabled/g" /etc/selinux/config
 sed -i "s/^SELINUX=permissive/SELINUX=disabled/g" /etc/sysconfig/selinux
-sed -i "s/^SELINUX=permissive/SELINUX=disabled/g" /etc/selinux/config'|sudo sh
+sed -i "s/^SELINUX=permissive/SELINUX=disabled/g" /etc/selinux/config'| sh
 
 getenforce
 
@@ -58,7 +58,7 @@ echo "增加DNS"
 echo 'echo nameserver 114.114.114.114
 nameserver 1.1.1.1
 nameserver 1.0.0.1
->>/etc/resolv.conf' |sudo sh
+>>/etc/resolv.conf' | sh
 
 # 在RHEL/CentOS 7 系统上可能会路由失败
 echo 'cat <<EOF >  /etc/sysctl.d/k8s.conf
