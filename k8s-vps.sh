@@ -6,13 +6,17 @@ set -o pipefail
 KUBE_VERSION=v1.10.1
 KUBE_PAUSE_VERSION=3.1
 ETCD_VERSION=3.1.12
-DNS_VERSION=1.14.4
+DNS_VERSION=1.14.8
 DASHBOARD_VERSION=v1.8.3
 ADDON_VERSION=v8.6
+FLANNEL_VERSION=v0.9.1-amd64
+
 
 
 GCR_URL=k8s.gcr.io
 ALIYUN_URL=registry.cn-hangzhou.aliyuncs.com/etrans
+COREOS_URL=quay.io/coreos
+CALICO_URL=quay.io/calico
 
 
 images=(
@@ -29,11 +33,35 @@ kubernetes-dashboard-amd64:${DASHBOARD_VERSION}
 kube-addon-manager:${ADDON_VERSION}
 )
 
+coreos_images=(
+flannel:${FLANNEL_VERSION}
+)
+
+calico_images=(
+node:v3.0.5
+kube-controllers:v2.0.3
+etcd:v3.1.10
+)
+
+docker login --username=etransk8s --password=#@!@#@!$@!! registry.cn-hangzhou.aliyuncs.com
 
 for imageName in ${images[@]} ; do
   docker pull $GCR_URL/$imageName
   docker tag $GCR_URL/$imageName $ALIYUN_URL/$imageName
-  docker login --username=etransk8s --password=&DSA!@#@!XXX registry.cn-hangzhou.aliyuncs.com
+  docker push $ALIYUN_URL/$imageName
+  docker rmi $ALIYUN_URL/$imageName
+done
+
+for imageName in ${coreos_images[@]} ; do
+  docker pull $COREOS_URL/$imageName
+  docker tag $COREOS_URL/$imageName $ALIYUN_URL/$imageName
+  docker push $ALIYUN_URL/$imageName
+  docker rmi $ALIYUN_URL/$imageName
+done
+
+for imageName in ${calico_images[@]} ; do
+  docker pull $CALICO_URL/$imageName
+  docker tag $CALICO_URL/$imageName $ALIYUN_URL/$imageName
   docker push $ALIYUN_URL/$imageName
   docker rmi $ALIYUN_URL/$imageName
 done

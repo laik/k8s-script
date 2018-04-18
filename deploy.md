@@ -100,8 +100,9 @@ sudo sh -c  "echo '127.0.0.1   localhost localhost.localdomain localhost4 localh
 ## 一些配置(官方文档上写的 v1.10.1)
 
 ```Scripts
-echo "关闭Swap"
 sudo -i
+
+echo "关闭Swap"
 swapoff -a 
 sed 's/.*swap.*/#&/' /etc/fstab
 
