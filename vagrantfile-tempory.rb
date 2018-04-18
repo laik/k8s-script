@@ -28,8 +28,11 @@ SCRIPT
 $DEFAULTSETTING = <<SCRIPT
 sudo -i 
 
-# disable firewall
+echo "关闭Swap"
+swapoff -a 
+sed 's/.*swap.*/#&/' /etc/fstab
 
+echo "关闭防火墙"
 systemctl disable firewalld.service
 systemctl stop firewalld.service
 
@@ -98,7 +101,7 @@ echo 'Environment="KUBELET_EXTRA_ARGS=--fail-swap-on=false"' > /etc/systemd/syst
 systemctl daemon-reload
 systemctl enable kubelet && systemctl start kubelet
 
-
+cd /vgrant && chmod +x k8s-dev.sh && sh k8s-dev.sh && cd ~
 
 SCRIPT
 
