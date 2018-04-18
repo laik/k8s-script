@@ -7,6 +7,9 @@
 # you're doing.
 
 
+# wget -O Vgrantfile https://raw.githubusercontent.com/laik/k8s-script/maste/vagrantfile-temporary.rb
+
+
 KubernetesHosts = {
     :node1 => '192.168.33.10',
     :node2 => '192.168.33.20',
@@ -31,7 +34,14 @@ systemctl disable firewalld.service
 systemctl stop firewalld.service
 
 # install go git
-yum install lsof wget git go -y
+yum install wget -y
+
+# 更新阿里云repo
+wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo
+yum makecache
+
+
+yum install git lsof -y
 
 echo "关闭Selinux"
 setenforce  0
@@ -54,7 +64,7 @@ nameserver 1.0.0.1
 echo 'cat <<EOF >  /etc/sysctl.d/k8s.conf
 net.bridge.bridge-nf-call-ip6tables = 1
 net.bridge.bridge-nf-call-iptables = 1
-EOF' | sudo sh
+EOF' |  sh
 
 sysctl -p /etc/sysctl.conf
 
@@ -72,6 +82,8 @@ EOF' |  sh
 
 yum install -y kubelet kubeadm kubectl docker
 
+# 启动 Docker
+systemctl enable docker && systemctl start docker
 
 # 检查 Docker 存储CgroupDriver 与 Kubelet 的一致性
 iscgroupfs=`docker info | grep -i cgroup | grep cgroupfs | wc -l` && if [ 1 -eq $iscgroupfs ]; then \
@@ -84,7 +96,6 @@ echo 'Environment="KUBELET_EXTRA_ARGS=--fail-swap-on=false"' > /etc/systemd/syst
 
 # 需要访问下当前 Kubeadm 安装时会选择什么样的镜像版本
 systemctl daemon-reload
-systemctl enable docker && systemctl start docker
 systemctl enable kubelet && systemctl start kubelet
 
 curl -Ss https://raw.githubusercontent.com/laik/k8s-script/master/k8s-dev.sh | sh
