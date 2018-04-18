@@ -19,7 +19,7 @@
 > curl https://raw.githubusercontent.com/laik/k8s-script/master/vagrantfile-tempory.rb > Vagrantfile 
 
 [√] 开始下载准备好的镜像(`tmp/k8s-dev.sh`需要修改里面的用户密码[自己去阿里云搞个用户])
-> mkdir tmp
+> mkdir tmp &&
 > curl https://raw.githubusercontent.com/laik/k8s-script/master/k8s-dev.sh > tmp/k8s-dev.sh
 
 [√] 启动 Vagrant 
