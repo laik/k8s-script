@@ -49,21 +49,15 @@ $ export KUBECONFIG=/etc/kubernetes/admin.conf
 # 也可以直接放到~/.bash_profile
 $ echo "export KUBECONFIG=/etc/kubernetes/admin.conf" >> ~/.bashrc
 
-接下来要注意，我们必须自己来安装一个network addon。
-network addon必须在任何app部署之前安装好。同样的，kube-dns也会在network addon安装好之后才启动。kubeadm只支持CNI-based networks（不支持kubenet）。
-比较常见的network addon有：Calico, Canal, Flannel, Kube-router, Romana, Weave Net等。这里我们使用Flannel。
-
----
-> kubeadm join 10.0.2.15:6443 --token zdl0z3.qcry6ooyr2xtzogs --discovery-token-ca-cert-hash sha256:4828f8c7eb5a714427bf94d2fdd92bddd8cb50a0fefa8c27bf67968a8c135ba6 --ignore-preflight-errors=all
-
---- 
-
-# 默认情况下，为了保证master的安全，master是不会被调度到app的。你可以取消这个限制通过输入：
+# 默认情况下，为了保证master的安全，master是不会被调度到app的。你可以取消这个限制通过输入(单机测试)：
 > kubectl taint nodes --all node-role.kubernetes.io/master-
----
+
+# 接下来要注意，我们必须自己来安装一个network addon。network addon必须在任何app部署之前安装好。同样的，kube-dns也会在network addon安装好之后才启动 kubeadm只支持CNI-based networks（不支持kubenet）。比较常见的network addon有：Calico, Canal, Flannel, Kube-router, Romana, Weave Net等。这里我们使用Calico。
 
 # 用 Calico 作为网络传输层
 >  kubectl apply -f https://docs.projectcalico.org/v3.0/getting-started/kubernetes/installation/hosted/kubeadm/1.7/calico.yaml
+
+---
 
 
 
