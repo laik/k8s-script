@@ -79,5 +79,5 @@ kubectl get po -o wide --all-namespaces
 ```
 
 ```
-  kubeadm join 10.0.2.15:6443 --token 6y08dg.q977edbxcjepnq68 --discovery-token-ca-cert-hash sha256:003ade97af781e60aba97817f0330f512a531336e604950b694ebfa3fcd0b6cd
+kubeadm join 10.0.2.15:6443 --token 6y08dg.q977edbxcjepnq68 --discovery-token-ca-cert-hash sha256:003ade97af781e60aba97817f0330f512a531336e604950b694ebfa3fcd0b6cd
 ```

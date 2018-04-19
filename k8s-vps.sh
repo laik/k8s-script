@@ -45,12 +45,12 @@ kube-addon-manager:${ADDON_VERSION}
 
 coreos_images=(
 flannel:${FLANNEL_VERSION}
+etcd:v3.1.10
 )
 
 calico_images=(
 node:v3.0.5
 kube-controllers:v2.0.3
-etcd:v3.1.10
 )
 
 docker login --username=${USERNAME} --password=${PASSWORD} registry.cn-hangzhou.aliyuncs.com
