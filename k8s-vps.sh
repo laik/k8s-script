@@ -3,6 +3,17 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
+if [ "$#" -ne 2 ]; then
+        echo "你需要传入 username,password"
+        exit
+fi
+
+if [ -n "$1" ]; then
+        USERNAME="$1"
+        PASSWORD="$2"
+fi
+
+
 KUBE_VERSION=v1.10.1
 KUBE_PAUSE_VERSION=3.1
 ETCD_VERSION=3.1.12
@@ -10,7 +21,6 @@ DNS_VERSION=1.14.8
 DASHBOARD_VERSION=v1.8.3
 ADDON_VERSION=v8.6
 FLANNEL_VERSION=v0.9.1-amd64
-
 
 
 GCR_URL=k8s.gcr.io
@@ -43,7 +53,7 @@ kube-controllers:v2.0.3
 etcd:v3.1.10
 )
 
-docker login --username=etransk8s --password=#@!@#@!$@!! registry.cn-hangzhou.aliyuncs.com
+docker login --username=${USERNAME} --password=${PASSWORD} registry.cn-hangzhou.aliyuncs.com
 
 for imageName in ${images[@]} ; do
   docker pull $GCR_URL/$imageName

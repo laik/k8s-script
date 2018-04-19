@@ -3,8 +3,16 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-USERNAME=etransk8s
-PASSWORD=Apple336362
+if [ "$#" -ne 2 ]; then
+        echo "你需要传入 username,password"
+        exit
+fi
+
+if [ -n "$1" ]; then
+        USERNAME="$1"
+        PASSWORD="$2"
+fi
+
 
 KUBE_VERSION=v1.10.1
 KUBE_PAUSE_VERSION=3.1

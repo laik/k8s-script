@@ -66,8 +66,8 @@ $ echo "export KUBECONFIG=/etc/kubernetes/admin.conf" >> ~/.bashrc
 Enjoy it!!
 
 [√] FQA
-   > 1. cni 问题 Container runtime network not ready: NetworkReady=false reason:NetworkPluginNotReady message:docker: network plugin is not ready: cni config uninitialized
-    >> 删除/etc/systemd/system/kubelet.service.d/10-kubeadm.conf中的$ KUBELET_NETWORK_ARGS systemctl启用kubelet && systemctl启动kubelet
+> 1. cni 问题 Container runtime network not ready: NetworkReady=false reason:NetworkPluginNotReady message:docker: network plugin is not ready: cni config uninitialized
+>> 删除/etc/systemd/system/kubelet.service.d/10-kubeadm.conf中的$ KUBELET_NETWORK_ARGS systemctl启用kubelet && systemctl启动kubelet
 
 ---
 
