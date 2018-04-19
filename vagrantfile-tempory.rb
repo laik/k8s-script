@@ -36,15 +36,16 @@ echo "关闭防火墙"
 systemctl disable firewalld.service
 systemctl stop firewalld.service
 
+echo "安装 wget"
 yum install wget -y
 
-# 使用163的centos repo
+echo "使用163的centos repo"
 wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.163.com/.help/CentOS7-Base-163.repo
 yum makecache
 
 
-## delete install git
-# yum install git lsof -y 
+echo "安装....一些需要安装的"
+yum install git lsof go -y 
 
 echo "关闭Selinux"
 setenforce  0
@@ -52,26 +53,26 @@ echo 'sed -i "s/^SELINUX=enforcing/SELINUX=disabled/g" /etc/sysconfig/selinux
 sed -i "s/^SELINUX=enforcing/SELINUX=disabled/g" /etc/selinux/config
 sed -i "s/^SELINUX=permissive/SELINUX=disabled/g" /etc/sysconfig/selinux
 sed -i "s/^SELINUX=permissive/SELINUX=disabled/g" /etc/selinux/config'| sh
-
 getenforce
 
 
 
 echo "增加DNS"
 echo 'echo nameserver 114.114.114.114
+nameserver 202.96.128.66
+nameserver 202.96.128.166
 nameserver 1.1.1.1
 nameserver 1.0.0.1
 >>/etc/resolv.conf' | sh
 
-# 在RHEL/CentOS 7 系统上可能会路由失败
+echo "在RHEL/CentOS 7 系统上可能会路由失败,添加配置"s
 echo 'cat <<EOF >  /etc/sysctl.d/k8s.conf
 net.bridge.bridge-nf-call-ip6tables = 1
 net.bridge.bridge-nf-call-iptables = 1
 EOF' |  sh
-
 sysctl -p /etc/sysctl.conf
 
-# 阿里 K8s yum 源
+echo "更改kubernetes 阿里 K8s yum 源"
 echo 'cat <<EOF > /etc/yum.repos.d/kubernetes.repo
 [kubernetes]
 name=Kubernetes
@@ -83,25 +84,35 @@ gpgkey=http://mirrors.aliyun.com/kubernetes/yum/doc/yum-key.gpg
        http://mirrors.aliyun.com/kubernetes/yum/doc/rpm-package-key.gpg
 EOF' |  sh
 
+echo "安装 kube-comp"
 yum install -y kubelet kubeadm kubectl docker
 
-# 启动 Docker
+echo "使用阿里云加速器"
+tee /etc/docker/daemon.json <<-'EOF'
+{
+  "registry-mirrors": ["https://ek7vcrxc.mirror.aliyuncs.com"]
+}
+EOF
+
+echo "启动 Docker................."
+systemctl daemon-reload && systemctl restart docker
 systemctl enable docker && systemctl start docker
 
-# 检查 Docker 存储CgroupDriver 与 Kubelet 的一致性
+echo "检查 Docker 存储CgroupDriver 与 Kubelet 的一致性"
 iscgroupfs=`docker info | grep -i cgroup | grep cgroupfs | wc -l` && if [ 1 -eq $iscgroupfs ]; then \
 sed -i "s/cgroup-driver=systemd/cgroup-driver=cgroupfs/g" /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
 fi
 
-# kubelet 关闭swap
+echo "kubelet 增加不使用swap配置"
 echo 'Environment="KUBELET_EXTRA_ARGS=--fail-swap-on=false"' > /etc/systemd/system/kubelet.service.d/90-local-extras.conf
 
 
-# 需要访问下当前 Kubeadm 安装时会选择什么样的镜像版本
+echo "启动kubelet"
 systemctl daemon-reload
 systemctl enable kubelet && systemctl start kubelet
 
-cd /vgrant && chmod +x k8s-dev.sh && sh k8s-dev.sh && cd ~
+echo "执行下载镜像脚本"
+cd /vagrant && chmod +x k8s-dev.sh && sh k8s-dev.sh && cd ~
 
 SCRIPT
 
