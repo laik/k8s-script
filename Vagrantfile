@@ -37,10 +37,6 @@ sed -i 's/^#UsePAM/UsePAM/g' /etc/ssh/sshd_config
 sed -i 's/^#PermitRootLogin/PermitRootLogin/g'  /etc/ssh/sshd_config
 systemctl restart sshd
 
-
-echo "执行下载镜像脚本"
-wget -O k8s-dev.sh https://raw.githubusercontent.com/laik/k8s-script/master/k8s-dev.sh && chmod +x k8s-dev.sh && sh k8s-dev.sh && cd ~
-
 SCRIPT
 
 # Map 配置文件自动创建多台相同的 Centos 主机

@@ -13,38 +13,57 @@
 | node3 | 192.168.33.43 | virtual ware |
 
 
-## Vagrant+Virtualbox
-
+## 虚拟机测试环境用户 Vagrant+Virtualbox
 [√] 下载 Vagrantfile
 > curl https://raw.githubusercontent.com/laik/k8s-script/master/Vagrantfile > Vagrantfile 
 
-[√] 开始下载准备好的镜像(`tmp/k8s-dev.sh`需要修改里面的用户密码[自己去阿里云搞个用户])
-> mkdir tmp &&
-> curl https://raw.githubusercontent.com/laik/k8s-script/master/k8s-dev.sh > tmp/k8s-dev.sh
+[√] 创建个 tmp 目录共享
+> mkdir tmp 
 
 [√] 启动 Vagrant 
 > vagrant up
 
-[√] 需要手工初始化kubernetes
 
+## 生产环境用户
+
+[√] 配置 IP 地址 及下载相关设定
+```
+sudo sh -c  "echo '#
+192.168.33.40   node1
+192.168.33.41   node2
+192.168.33.42   node3
+' >> /etc/hosts"
+
+yum install -y wget 
+wget -O centos7-setting.sh https://raw.githubusercontent.com/laik/k8s-script/master/centos7-setting.sh && sh centos7-setting.sh
+
+```
+
+## 初始化Kubernetes
+
+[√] 需要手工初始化kubernetes
 第一次初始化失败已经存在配置文件,需要加 `--ignore-preflight-errors=all`(参数跟飞机起飞)
 
 ```Shell
-# 初始化获取当前版本
+# 下载镜像
+echo "下载 github 下的脚本k8s-dev.sh 下载v1.10.1 所需在镜像文件 需要 docker login 阿里云 Registry 当然,我的密码肯定不是123456啦"
+docker login --username=etransk8s --password=123456 registry.cn-hangzhou.aliyuncs.com
+wget -O k8s-dev.sh https://raw.githubusercontent.com/laik/k8s-script/master/k8s-dev.sh && chmod +x k8s-dev.sh && sh k8s-dev.sh && cd ~
+
+
+# 初始化获取当前版本(下面已经指定版本了)
 curl https://storage.googleapis.com/kubernetes-release/release/stable-1.10.txt
 
 # 我们使用v1.10.1
 kubeadm init --apiserver-advertise-address=192.168.33.41--kubernetes-version=v1.10.1 --pod-network-cidr=10.244.0.0/16
 
 # 对于非root用户
-$ mkdir -p $HOME/.kube
-$ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-$ sudo chown $(id -u):$(id -g) $HOME/.kube/config
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
-# 对于root用户
-$ export KUBECONFIG=/etc/kubernetes/admin.conf
-# 也可以直接放到~/.bash_profile
-$ echo "export KUBECONFIG=/etc/kubernetes/admin.conf" >> ~/.bashrc
+# 对于root用户 直接放到~/.bash_bashrc
+export KUBECONFIG=/etc/kubernetes/admin.conf && echo "export KUBECONFIG=/etc/kubernetes/admin.conf" >> ~/.bashrc
 
 # 默认情况下，为了保证master的安全，master是不会被调度到app的。你可以取消这个限制通过输入：
 > kubectl taint nodes --all node-role.kubernetes.io/master-
@@ -75,8 +94,9 @@ type: ClusterIP
 type: NodePort
 
 下载 Access 访问权限配置
-
 kubectl apply -f https://raw.githubusercontent.com/laik/k8s-script/master/kube-dashboard-access.yaml
+
+然后就可以以主机 ip:端口的方式访问啦!
 
 Done!!! 
 ```
@@ -85,7 +105,7 @@ Done!!!
 [√] 清除当前集群信息
 
 ```
-   kubeadm reset
+kubeadm reset
 ```
 
 Enjoy it!!
@@ -148,7 +168,7 @@ Enjoy it!!
 >>> Dashboard has been exposed on port 31707 (HTTPS). Now you can access it from your browser at: https://<master-ip>:31707. master-ip can be found by executing kubectl cluster-info. Usually it is either 127.0.0.1 or IP of your machine, assuming that your cluster is running directly on the machine, on which these commands are executed.
 >>> ```
 >>> 
->>> #### 当改为节点访问10.100.124.90:31707 时会出现"system:serviceaccount:kube-system:kubernetes-dashboard"
+>>> #### 当改为节点访问${master}:31707 时会出现"system:serviceaccount:kube-system:kubernetes-dashboard"
 >>> 
 >>> If you received an error like below, you need to grant access to Kubernetes dashboard to in your cluster.
 >>> 
@@ -253,7 +273,7 @@ Enjoy it!!
 >>>   "code": 401
 >>> }
 >>> ```
->>> 解决方法1：
+>>> ##### Unauthorized解决方法1：
 >>> 新建 /etc/kubernetes/basic_auth_file 文件，并在其中添加：
 >>> 
 >>> admin123,admin,1002
@@ -276,7 +296,7 @@ Enjoy it!!
 >>> 将访问账号名admin与dashboard.yaml文件中指定的cluster-admin关联，获得访问权限。
 >>> 
 >>> 
->>> #### 解决方法2:
+>>> ##### Unauthorized解决方法2:
 >>> ```
 >>> nohup kubectl proxy --accept-hosts='^*$' > /tmp/proxy.log 2>&1 &
 >>> ```

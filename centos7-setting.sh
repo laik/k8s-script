@@ -104,8 +104,3 @@ echo 'Environment="KUBELET_EXTRA_ARGS=--fail-swap-on=false"' > /etc/systemd/syst
 echo "启动kubelet"
 systemctl daemon-reload
 systemctl enable kubelet
-
-
-echo "下载 github 下的脚本k8s-dev.sh 下载v1.10.1 所需在镜像文件"
-wget -O k8s-dev.sh https://raw.githubusercontent.com/laik/k8s-script/master/k8s-dev.sh
-sh k8s-dev.sh 
