@@ -58,12 +58,27 @@ kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$kubever"
 systemctl restart docker && systemctl restart kubelet
 
 # 用 Calico 作为网络传输层
-kubectl apply -f https://docs.projectcalico.org/v3.0/getting-started/kubernetes/installation/hosted/kubeadm/1.7/calico.yaml
+kubectl apply -f https://raw.githubusercontent.com/laik/k8s-script/master/calico.yaml
 systemctl restart docker && systemctl restart kubelet
 
 # dashboard
-kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/master/src/deploy/recommended/kubernetes-dashboard.yaml
+kubectl apply -f https://raw.githubusercontent.com/laik/k8s-script/master/kubernetes-dashboard.yaml
 kubectl proxy
+
+# heapster 安装
+kubectl apply -f https://raw.githubusercontent.com/laik/k8s-script/master/heapster-controller-standalone.yaml
+
+# dashboard access配置 并修改服务使用 NodePort 访问
+kubectl -n kube-system edit service kubernetes-dashboard
+type: ClusterIP
+改成
+type: NodePort
+
+下载 Access 访问权限配置
+
+kubectl apply -f https://raw.githubusercontent.com/laik/k8s-script/master/kube-dashboard-access.yaml
+
+Done!!! 
 ```
 
 

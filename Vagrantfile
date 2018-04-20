@@ -39,7 +39,7 @@ systemctl restart sshd
 
 
 echo "执行下载镜像脚本"
-cd /vagrant && chmod +x k8s-dev.sh && sh k8s-dev.sh && cd ~
+wget -O k8s-dev.sh https://raw.githubusercontent.com/laik/k8s-script/master/k8s-dev.sh && chmod +x k8s-dev.sh && sh k8s-dev.sh && cd ~
 
 SCRIPT
 
