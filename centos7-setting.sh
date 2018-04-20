@@ -91,6 +91,7 @@ echo "启动 Docker................."
 systemctl daemon-reload && systemctl restart docker
 systemctl enable docker && systemctl start docker
 
+
 echo "检查 Docker 存储CgroupDriver 与 Kubelet 的一致性"
 iscgroupfs=`docker info | grep -i cgroup | grep cgroupfs | wc -l` && if [ 1 -eq $iscgroupfs ]; then \
 sed -i "s/cgroup-driver=systemd/cgroup-driver=cgroupfs/g" /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
