@@ -21,6 +21,7 @@ DNS_VERSION=1.14.8
 DASHBOARD_VERSION=v1.8.3
 ADDON_VERSION=v8.6
 FLANNEL_VERSION=v0.9.1-amd64
+HEAPSTER_VERSION=v1.4.2
 
 
 GCR_URL=k8s.gcr.io
@@ -41,6 +42,7 @@ k8s-dns-kube-dns-amd64:${DNS_VERSION}
 k8s-dns-dnsmasq-nanny-amd64:${DNS_VERSION}
 kubernetes-dashboard-amd64:${DASHBOARD_VERSION}
 kube-addon-manager:${ADDON_VERSION}
+heapster-amd64:${HEAPSTER_VERSION}
 )
 
 coreos_images=(
