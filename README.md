@@ -71,12 +71,13 @@ export KUBECONFIG=/etc/kubernetes/admin.conf && echo "export KUBECONFIG=/etc/kub
 # addons 
 接下来要注意，我们必须自己来安装一个network addon。network addon必须在任何app部署之前安装好。同样的，kube-dns也会在network addon安装好之后才启动 kubeadm只支持CNI-based networks（不支持kubenet）。比较常见的network addon有：Calico, Canal, Flannel, Kube-router, Romana, Weave Net等。这里我们使用Calico。
 
-# 用 weave net 安装方法
+# 以下两个网络组件可以选择一个安装,或者两个都安装
+## 用 weave net 安装方法
 export kubever=$(kubectl version | base64 | tr -d '\n')
 kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$kubever"
 systemctl restart docker && systemctl restart kubelet
 
-# 用 Calico 作为网络传输层
+## 用 Calico 作为网络传输层
 kubectl apply -f https://raw.githubusercontent.com/laik/k8s-script/master/calico.yaml
 systemctl restart docker && systemctl restart kubelet
 
@@ -84,7 +85,7 @@ systemctl restart docker && systemctl restart kubelet
 kubectl apply -f https://raw.githubusercontent.com/laik/k8s-script/master/kubernetes-dashboard.yaml
 kubectl proxy
 
-# heapster 安装
+# heapster 安装(需要改成集群信息配置[暂时不安装])
 kubectl apply -f https://raw.githubusercontent.com/laik/k8s-script/master/heapster-controller-standalone.yaml
 
 # dashboard access配置 并修改服务使用 NodePort 访问
@@ -110,6 +111,33 @@ kubeadm reset
 
 Enjoy it!!
 
+配置完成后信息:
+```
+[root@node4 ~]# kubectl get po -o wide --all-namespaces
+
+NAMESPACE     NAME                                    READY     STATUS    RESTARTS   AGE       IP              NODE
+kube-system   etcd-node4                              1/1       Running   1          8m        192.168.33.40   node4
+kube-system   kube-apiserver-node4                    1/1       Running   1          8m        192.168.33.40   node4
+kube-system   kube-controller-manager-node4           1/1       Running   1          8m        192.168.33.40   node4
+kube-system   kube-dns-86f4d74b45-kghhf               3/3       Running   0          10m       10.32.0.2       node4
+kube-system   kube-proxy-4m7q6                        1/1       Running   1          10m       192.168.33.40   node4
+kube-system   kube-scheduler-node4                    1/1       Running   1          8m        192.168.33.40   node4
+kube-system   kubernetes-dashboard-7d5dcdb6d9-9gsxs   1/1       Running   0          6m        10.32.0.3       node4
+kube-system   weave-net-6575v                         2/2       Running   0          9m        192.168.33.40   node4
+[root@node4 ~]# 
+[root@node4 ~]# 
+[root@node4 ~]# 
+[root@node4 ~]# 
+[root@node4 ~]# kubectl get svc
+NAME         TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
+kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   10m
+[root@node4 ~]# kubectl get svc --all-namespaces
+NAMESPACE     NAME                   TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)         AGE
+default       kubernetes             ClusterIP   10.96.0.1      <none>        443/TCP         11m
+kube-system   kube-dns               ClusterIP   10.96.0.10     <none>        53/UDP,53/TCP   11m
+kube-system   kubernetes-dashboard   NodePort    10.102.52.30   <none>        443:32093/TCP   7m
+
+```
 
 ---
 
