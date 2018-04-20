@@ -1,17 +1,8 @@
 #!/bin/bash
+# 下载etrans 的 K8s 镜像
 set -o errexit
 set -o nounset
 set -o pipefail
-
-if [ "$#" -ne 2 ]; then
-        echo "你需要传入 username,password"
-        exit
-fi
-
-if [ -n "$1" ]; then
-        USERNAME="$1"
-        PASSWORD="$2"
-fi
 
 
 KUBE_VERSION=v1.10.1
@@ -59,7 +50,7 @@ kube-controllers:v2.0.3
 )
 
 
-docker login --username=${USERNAME} --password=${PASSWORD} ${REGISTRY}
+#docker login --username=${USERNAME} --password=${PASSWORD} ${REGISTRY}
 
 for imageName in ${images[@]} ; do
   docker pull $ALIYUN_URL/$imageName
