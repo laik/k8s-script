@@ -11,17 +11,17 @@
 
 
 KubernetesHosts = {
-    :node1 => '192.168.33.40',
-    :node2 => '192.168.33.41',
-    :node3 => '192.168.33.42',
+    :kubem1 => '192.168.4.240',
+    :kubem2 => '192.168.4.241',
+    :kubem3 => '192.168.4.242',
 }
 
 # Setting all node ip address
 $IPADDR = <<SCRIPT 
 sudo sh -c  "echo '#
-192.168.33.40   node1
-192.168.33.41   node2
-192.168.33.42   node3
+192.168.4.240   kubem1
+192.168.4.241   kubem2
+192.168.4.242   kubem3
 ' >> /etc/hosts"
 SCRIPT
 
@@ -50,11 +50,11 @@ Vagrant.configure("2") do |config|
                 end
                 app_config.vm.box = "centos74"
                 app_config.vm.hostname = app_server_name
-                app_config.vm.network :private_network,ip: app_server_ip
+                app_config.vm.network :private_network
                         config.vm.provision "shell",inline: $IPADDR
                         config.vm.provision "shell",inline: $DEFAULTSETTING
                 #公有网络可访问
-                config.vm.network "public_network",:bridge => 'em2'
+                config.vm.network "public_network",:bridge => 'em2',ip: app_server_ip
              end
              config.vm.synced_folder "tmp","/vagrant", type: "nfs",nfs: true,linux__nfs_options: ['rw','no_subtree_check','all_squash','async']
         end
