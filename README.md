@@ -6,11 +6,12 @@
 * 当前 K8s 版本 v1.10.1
 
 #### Vagrant vm 机器列表(如果真实机器也是如此)
-| hosts | ip            | delopy       |
-|:------|:--------------|:-------------|
-| node1 | 192.168.33.41 | virtual ware |
-| node2 | 192.168.33.42 | virtual ware |
-| node3 | 192.168.33.43 | virtual ware |
+| hosts      | ip            | delopy       |
+|:-----------|:--------------|:-------------|
+| kubem1     | 192.168.4.240 | virtual ware |
+| kubem2     | 192.168.4.241 | virtual ware |
+| kubem3     | 192.168.4.242 | virtual ware |
+| virtual ip | 192.168.4.245 | virtual ware |
 
 
 ## 虚拟机测试环境用户 Vagrant+Virtualbox
@@ -29,9 +30,9 @@
 [√] 配置 IP 地址 及下载相关设定
 ```
 sudo sh -c  "echo '#
-192.168.33.40   node1
-192.168.33.41   node2
-192.168.33.42   node3
+192.168.4.240   kubem1
+192.168.4.241   kubem2
+192.168.4.242   kubem3
 ' >> /etc/hosts"
 
 yum install -y wget 
@@ -50,12 +51,15 @@ echo "下载 github 下的脚本k8s-dev.sh 下载v1.10.1 所需在镜像文件 �
 docker login --username=etransk8s --password=123456 registry.cn-hangzhou.aliyuncs.com
 wget -O k8s-dev.sh https://raw.githubusercontent.com/laik/k8s-script/master/k8s-dev.sh && chmod +x k8s-dev.sh && sh k8s-dev.sh && cd ~
 
+# centos7.4 kube-v1.10.1 cni 问题 Container runtime network not ready: NetworkReady=false reason:NetworkPluginNotReady message:docker: network plugin is not ready: cni config uninitialized
+
+sed -i 's/.*cni.*/#&/g' /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
 
 # 初始化获取当前版本(下面已经指定版本了)
 curl https://storage.googleapis.com/kubernetes-release/release/stable-1.10.txt
 
 # 我们使用v1.10.1
-kubeadm init --apiserver-advertise-address=192.168.33.41--kubernetes-version=v1.10.1 --pod-network-cidr=10.244.0.0/16
+kubeadm init --apiserver-advertise-address=192.168.4.240 --kubernetes-version=v1.10.1 --pod-network-cidr=10.244.0.0/16
 
 # 对于非root用户
 mkdir -p $HOME/.kube
@@ -100,6 +104,11 @@ kubectl apply -f https://raw.githubusercontent.com/laik/k8s-script/master/kube-d
 然后就可以以主机 ip:端口的方式访问啦!
 
 Done!!! 
+
+
+---
+基于上面配置 LVS+Keepalived (Kube-HA)
+
 ```
 
 

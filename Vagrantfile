@@ -37,6 +37,10 @@ sed -i 's/^#UsePAM/UsePAM/g' /etc/ssh/sshd_config
 sed -i 's/^#PermitRootLogin/PermitRootLogin/g'  /etc/ssh/sshd_config
 systemctl restart sshd
 
+echo "执行下载镜像脚本"
+docker login --username=etransk8s --password=${MY_PASSWORD} registry.cn-hangzhou.aliyuncs.com
+wget -O k8s-dev.sh https://raw.githubusercontent.com/laik/k8s-script/master/k8s-dev.sh && chmod +x k8s-dev.sh && sh k8s-dev.sh && cd ~
+
 SCRIPT
 
 # Map 配置文件自动创建多台相同的 Centos 主机
@@ -50,12 +54,13 @@ Vagrant.configure("2") do |config|
                 end
                 app_config.vm.box = "centos74"
                 app_config.vm.hostname = app_server_name
-                app_config.vm.network :private_network
+                app_config.vm.network :private_network, type: "dhcp"
                         config.vm.provision "shell",inline: $IPADDR
                         config.vm.provision "shell",inline: $DEFAULTSETTING
                 #公有网络可访问
                 config.vm.network "public_network",:bridge => 'em2',ip: app_server_ip
              end
-             config.vm.synced_folder "tmp","/vagrant", type: "nfs",nfs: true,linux__nfs_options: ['rw','no_subtree_check','all_squash','async']
+             # 如果需要 nfs
+             #config.vm.synced_folder "tmp","/vagrant", type: "nfs",nfs: true,linux__nfs_options: ['rw','no_subtree_check','all_squash','async']
         end
 end

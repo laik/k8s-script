@@ -36,6 +36,8 @@ k8s-dns-dnsmasq-nanny-amd64:${DNS_VERSION}
 kubernetes-dashboard-amd64:${DASHBOARD_VERSION}
 kube-addon-manager:${ADDON_VERSION}
 heapster-amd64:${HEAPSTER_VERSION}
+heapster-influxdb-amd64:v1.3.3
+heapster-grafana-amd64:v4.4.3
 )
 
 coreos_images=(

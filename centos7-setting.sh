@@ -2,7 +2,7 @@
 
 echo "关闭Swap"
 swapoff -a 
-sed 's/.*swap.*/#&/' /etc/fstab
+sed -i 's/.*swap.*/#&/' /etc/fstab
 
 echo "关闭防火墙"
 systemctl disable firewalld.service
@@ -22,7 +22,7 @@ getenforce
 
 echo "安装....一些需要安装的"
 yum install -y epel-release
-yum install -y yum-utils device-mapper-persistent-data lvm2 net-tools conntrack-tools wget vim  ntpdate libseccomp libtool-ltdl 
+yum install -y yum-utils device-mapper-persistent-data lvm2 net-tools conntrack-tools vim  ntpdate libseccomp libtool-ltdl ipvsadm keepalived
 
 echo 'ntp enable'
 systemctl enable ntpdate.service
