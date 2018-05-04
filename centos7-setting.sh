@@ -44,8 +44,7 @@ nameserver 114.114.114.114
 nameserver 202.96.128.66
 nameserver 202.96.128.166
 nameserver 1.1.1.1
-nameserver 1.0.0.1
->>/etc/resolv.conf' | sh
+nameserver 1.0.0.1 >>/etc/resolv.conf' | sh
 
 echo "在RHEL/CentOS 7 系统上可能会路由失败,添加配置"
 echo 'cat <<EOF >  /etc/sysctl.d/k8s.conf
