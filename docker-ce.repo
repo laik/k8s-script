@@ -1,3 +1,4 @@
+[docker-ce-stable]
 name=Docker CE Stable - $basearch
 baseurl=https://mirrors.tuna.tsinghua.edu.cn/docker-ce/linux/centos/7/$basearch/stable
 enabled=1
