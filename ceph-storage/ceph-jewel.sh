@@ -107,10 +107,20 @@ rm -rf /var/lib/ceph/*/*
 rm -rf /var/log/ceph/*
 rm -rf /var/run/ceph/*
 
+
+
 ceph-deploy mon add ceph1 ceph2 ceph3 
 
+# jewel 下可以用
 ceph-deploy osd prepare ceph1:/dev/sdb1 ceph2:/dev/sdb1 ceph3:/dev/sdb1
 ceph-deploy osd activate ceph1:/dev/sdb1 ceph2:/dev/sdb1 ceph3:/dev/sdb1
+
+# Luminous 
+ceph-deploy  --version
+# 2.0.0
+ceph-deploy osd create --data /dev/sdb1 ceph1
+ceph-deploy osd create --data /dev/sdb1 ceph2
+ceph-deploy osd create --data /dev/sdb1 ceph3
 
 
 
@@ -122,11 +132,11 @@ ceph health
 
 
 # -------------
-1/新建一个ceph pool，（两个数字为 {pg-num} [{pgp-num}）
+1、新建一个ceph pool，（两个数字为 {pg-num} [{pgp-num}）
 ceph osd pool create rbdpool 100 100
 
 2、在pool中新建一个镜像
-rbd create rbdpoolimages --size 80960 -p rbdpool   
+rbd create rbdpoolimages --size 80960 -p rbdpool
 或者 
 rbd create rbdpool/rbdpoolimages --size 102400
 在内核为3.10的不能实现绝大部分features，使用此命令 在后边加上 --image-format 2 --image-feature  layering
@@ -169,6 +179,24 @@ grep key /etc/ceph/ceph.client.admin.keyring |awk '{printf "%s", $NF}'|base64
 #example
 #QVFCL1l1cGFpaExPTkJBQWxpc0dYT1podmV2U2U2T2tuSjRqb0E9PQ
 
+# k8s 应用
+# 在文件/home/ceph-secret.yaml 添加以下内容
+apiVersion: v1
+kind: Secret
+metadata:
+	name: ceph-secret
+type: "kubernetes.io/rbd" 
+data:
+- key: QVFCZC8rdGFFNm1vQkJBQUtJeHFxOFBxaHcrdjlTRml0Y1RNRHc9PQ==
+
+
+# 给 K8s 的网卡kubem1 eth1 加个地址
+ifconfig eth1:0 192.168.5.240 netmask 255.255.255.0 up
+
+
+# luminous dashboard ip:7000
+ceph mgr module enable dashboard
+
 
 # command
 命令	功能
@@ -180,3 +208,16 @@ rbd feature disable 	 禁止掉块设备的某些特性
 rbd map 	 映射块设备 
 rbd remove 	 删除块设备 
 rbd resize 	 更改块设备的大小
+
+
+# IO 测试
+rbd bench-write --io-threads 4 rbdpool/rbdpoolimages
+# 清除掉刚刚上面测试的数据
+rados ls  -p rbdpool | grep rbd_data |xargs rados rm -p rbdpool
+
+# 查看集群统计信息
+rados df
+# 集群的 Pool
+rados lspools 
+# 集群信息
+ceph osd tree

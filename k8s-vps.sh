@@ -29,6 +29,7 @@ ALIYUN_URL=registry.cn-hangzhou.aliyuncs.com/etrans
 COREOS_URL=quay.io/coreos
 CALICO_URL=quay.io/calico
 
+CEPH_URL=gcr.io/kubernetes-helm
 
 images=(
 kube-proxy-amd64:${KUBE_VERSION}
@@ -57,6 +58,10 @@ node:v3.0.5
 kube-controllers:v2.0.3
 )
 
+ceph_images=(
+tiller:v2.9.0
+)
+
 docker login --username=${USERNAME} --password=${PASSWORD} registry.cn-hangzhou.aliyuncs.com
 
 for imageName in ${images[@]} ; do
@@ -76,6 +81,14 @@ done
 for imageName in ${calico_images[@]} ; do
   docker pull $CALICO_URL/$imageName
   docker tag $CALICO_URL/$imageName $ALIYUN_URL/$imageName
+  docker push $ALIYUN_URL/$imageName
+  docker rmi $ALIYUN_URL/$imageName
+done
+
+
+for imageName in ${ceph_images[@]} ; do
+  docker pull $CEPH_URL/$imageName
+  docker tag $CEPH_URL/$imageName $ALIYUN_URL/$imageName
   docker push $ALIYUN_URL/$imageName
   docker rmi $ALIYUN_URL/$imageName
 done

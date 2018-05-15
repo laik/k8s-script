@@ -50,18 +50,22 @@ Vagrant.configure("2") do |config|
         KubernetesHosts.each do |app_server_name, app_server_ip|
              #针对每一个app_server_name，来配置config.vm.define配置节点，命名为app_config
              config.vm.define app_server_name do |app_config|
+                #公有网络可访问
+                config.vm.network "public_network",:bridge => 'em2',ip: app_server_ip
+                #私有网络使用 DHCP
+                app_config.vm.network :public_network, type: "static"
+
                 app_config.vm.provider :virtualbox do |v|
                         v.customize ["modifyvm",:id,"--name",app_server_name,"--memory","2048","--cpus","2"]
                 end
                 app_config.vm.box = "centos74"
                 app_config.vm.hostname = app_server_name
-                app_config.vm.network :private_network, type: "dhcp"
              end
-             config.vm.provision "shell",inline: $IPADDR
-             config.vm.provision "shell",inline: $DEFAULTSETTING
-             #公有网络可访问
-             config.vm.network "public_network",:bridge => 'em2',ip: app_server_ip
-             # 如果需要 nfs
-             config.vm.synced_folder "tmp","/vagrant", type: "nfs",nfs: true,linux__nfs_options: ['rw','no_subtree_check','all_squash','async']
+
+                # 执行脚本
+                config.vm.provision "shell",inline: $IPADDR
+                config.vm.provision "shell",inline: $DEFAULTSETTING
+                 # 如果需要 nfs
+                config.vm.synced_folder "tmp","/vagrant", type: "nfs",nfs: true,linux__nfs_options: ['rw','no_subtree_check','all_squash','async']
         end
 end
