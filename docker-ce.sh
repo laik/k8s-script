@@ -14,7 +14,7 @@ yum remove docker \
 
 yum install -y yum-utils device-mapper-persistent-data lvm2
 
-wget -O /etc/yum.repod/docker-ce.repo https://raw.githubusercontent.com/laik/k8s-script/master/docker-ce.repo
+wget -O /etc/yum.repos.d/docker-ce.repo https://raw.githubusercontent.com/laik/k8s-script/master/docker-ce.repo
 # wget -O /etc/yum.repos.d/docker-ce.repo https://download.docker.com/linux/centos/docker-ce.repo
 
 # yum-config-manager --enable docker-ce-edge
