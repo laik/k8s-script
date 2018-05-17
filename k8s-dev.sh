@@ -82,3 +82,6 @@ for imageName in ${ceph_images[@]} ; do
   docker tag $ALIYUN_URL/$imageName $CEPH_URL/$imageName
   docker rmi $ALIYUN_URL/$imageName
 done
+
+# ceph pod rbd 
+docker pull quay.io/external_storage/rbd-provisioner

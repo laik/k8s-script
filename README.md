@@ -397,9 +397,6 @@ kube-system   kubernetes-dashboard   NodePort    10.102.52.30   <none>        44
 >>  Built:           Tue Jan 30 09:17:00 2018
 >>  OS/Arch:         linux/amd64
 
-
-
-
 ---
 
 

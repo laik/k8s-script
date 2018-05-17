@@ -15,7 +15,7 @@ echo $KUBEM1_NAME $KUBEM2_NAME $KUBEM3_NAME $KUBEM1_IP $KUBEM2_IP $KUBEM3_IP $CL
 # 配置keepalived 
 参考 keepalived.sh
 
-# 配置 ssl
+# 配置 ssl(必要配置)
 参考 ssl.sh
 
 # ETCD 配置
@@ -23,7 +23,7 @@ echo $KUBEM1_NAME $KUBEM2_NAME $KUBEM3_NAME $KUBEM1_IP $KUBEM2_IP $KUBEM3_IP $CL
 
 # kubeadm 启动
 ```
-kubeadm init --config config.yaml
+kubeadm init --config kubeadm-init-config.yaml
 ```
 
 # 如果使用了kubeadm reset 需要将证书重新拷贝过去

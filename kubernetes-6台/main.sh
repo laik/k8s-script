@@ -1,14 +1,28 @@
-export KUBEM1_NAME=kubem1
-export KUBEM2_NAME=kubem2
-export KUBEM3_NAME=kubem3
-export KUBEM1_IP=192.168.4.240
-export KUBEM2_IP=192.168.4.241
-export KUBEM3_IP=192.168.4.242
-export CLUSTER_IP=192.168.4.245
+# 全局配置脚本
+```
+export KUBEM1_NAME=k0
+export KUBEM2_NAME=k1
+export KUBEM3_NAME=k2
+export KUBEM4_NAME=k3
+export KUBEM5_NAME=k4
+export KUBEM6_NAME=k5
+export KUBEM1_IP=172.16.171.10
+export KUBEM2_IP=172.16.171.11
+export KUBEM3_IP=172.16.171.12
+export KUBEM4_IP=172.16.171.13
+export KUBEM5_IP=172.16.171.14
+export KUBEM6_IP=172.16.171.15
+export CLUSTER_IP=172.16.171.16
 export PEER_NAME=$(hostname)
 export PRIVATE_IP=$(ip addr show eth1 | grep -Po 'inet \K[\d.]+' | head -1)
 echo $KUBEM1_NAME $KUBEM2_NAME $KUBEM3_NAME $KUBEM1_IP $KUBEM2_IP $KUBEM3_IP $CLUSTER_IP $PEER_NAME $PRIVATE_IP
+```
 
+echo "kubeadm 与 需要安装的版本最好一致"
+echo "当前是v1.10.1 kubeadm-1.10.1-0.x86_64"
+echo "安装 kube"
+yum remove kubelet kubeadm kubectl -y
+yum install -y kubelet-1.10.1-0.x86_64 kubeadm-1.10.1-0.x86_64 kubectl-1.10.1-0.x86_64
 
 # 配置keepalived 
 参考 keepalived.sh
@@ -16,56 +30,44 @@ echo $KUBEM1_NAME $KUBEM2_NAME $KUBEM3_NAME $KUBEM1_IP $KUBEM2_IP $KUBEM3_IP $CL
 # 配置 ssl
 参考 ssl.sh
 
-### 如果没有 cfssl,需要下载安装
-$yum install golang git -y
-$export GOPATH=/usr/local
-$go get -u github.com/cloudflare/cfssl/cmd/...
-$ls /usr/local/bin/cfssl*
-cfssl cfssl-bundle cfssl-certinfo cfssljson cfssl-newkey cfssl-scan
-
-或 下载二进制安装
-
-$ wget https://pkg.cfssl.org/R1.2/cfssl_linux-amd64
-$ chmod +x cfssl_linux-amd64
-$ sudo mv cfssl_linux-amd64 /root/local/bin/cfssl
-
-$ wget https://pkg.cfssl.org/R1.2/cfssljson_linux-amd64
-$ chmod +x cfssljson_linux-amd64
-$ sudo mv cfssljson_linux-amd64 /root/local/bin/cfssljson
-
-$ wget https://pkg.cfssl.org/R1.2/cfssl-certinfo_linux-amd64
-$ chmod +x cfssl-certinfo_linux-amd64
-$ sudo mv cfssl-certinfo_linux-amd64 /root/local/bin/cfssl-certinfo
-
-$ export PATH=/root/local/bin:$PATH
-
-
 # ETCD 配置
 参考 etcd.sh
 
 # kubeadm 启动
-kubeadm init --config config.yaml
+
+
+```
+kubeadm init --config config.yaml --ignore-preflight-errors=FileAvailable--etc-kubernetes-manifests-etcd.yaml,ExternalEtcdVersion
+```
 
 # 如果使用了kubeadm reset 需要将证书重新拷贝过去
+```
 # cd /root/ssl && mkdir -p /etc/kubernetes/pki/etcd/ && cp etcd.pem etcd-key.pem ca.pem  /etc/kubernetes/pki/etcd/
+```
 
 # 对于root用户 直接放到~/.bash_bashrc
+```
 export KUBECONFIG=/etc/kubernetes/admin.conf && echo "export KUBECONFIG=/etc/kubernetes/admin.conf" >> ~/.bashrc
+```
 
 # 默认情况下，为了保证master的安全，master是不会被调度到app的。你可以取消这个限制通过输入：
+```
 kubectl taint nodes --all node-role.kubernetes.io/master-
+```
+
 
 # 将kubeadm生成证书密码文件分发到 kubem2 和 kubem3 上面去
- 
+``` 
 scp -r /etc/kubernetes/pki  kubem2:/etc/kubernetes/
 scp -r /etc/kubernetes/pki  kubem3:/etc/kubernetes/
- 
+```
 
 # 以下操作只在kubem1操作
 # ------------------------------------
 # 以下两个网络组件可以选择一个安装,或者两个都安装
 
 ## 用 weave net 安装方法
+```
 export kubever=$(kubectl version | base64 | tr -d '\n')
 kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$kubever"
 systemctl restart docker && systemctl restart kubelet
@@ -77,12 +79,13 @@ systemctl restart docker && systemctl restart kubelet
 #dashboard
 kubectl create -f kube-dashboard.yaml
 
-# 获取token,通过令牌登陆
+#获取token,通过令牌登陆
 kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep admin-user | awk '{print $1}')
 
-# heapster 安装
+#heapster 安装
 kubectl create -f heapster-all.yaml
 
-# .... 安装插件....等等..... 
+#.... 安装插件....等等..... 
 
-# 初始化 m2 m3
+#初始化 m2 m3
+```

@@ -25,11 +25,18 @@ apiServerCertSANs:
 - ${KUBEM1_NAME}
 - ${KUBEM2_NAME}
 - ${KUBEM3_NAME}
+- ${KUBEM4_NAME}
+- ${KUBEM5_NAME}
+- ${KUBEM6_NAME}
 - ${KUBEM1_IP}
 - ${KUBEM2_IP}
 - ${KUBEM3_IP}
-- ${CLUSTER_IP}
+- ${KUBEM4_IP}
+- ${KUBEM5_IP}
+- ${KUBEM6_IP}
 featureGates:
   CoreDNS: true
 EOF
 
+
+kubeadm init --config=config.yaml
