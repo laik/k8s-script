@@ -19,3 +19,4 @@ echo 'Environment="KUBELET_EXTRA_ARGS=--fail-swap-on=false"' > /etc/systemd/syst
 echo "启动kubelet"
 systemctl daemon-reload
 systemctl enable kubelet
+systemctl restart kubelet

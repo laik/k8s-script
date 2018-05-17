@@ -33,7 +33,7 @@ export PATH=$PATH:/usr/local/bin
 # ETCD 配置
 参考 etcd.sh
 
-# kubeadm 启动
+# kubeadm 启动(每个 Master)
 kubeadm init --config=config.yaml
 
 # 如果使用了kubeadm reset 需要将证书重新拷贝过去

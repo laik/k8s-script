@@ -408,6 +408,9 @@ kubectl get po -o wide --all-namespaces
 # 查看 Master join Token
 kubeadm token create --print-join-command
 
+# 获取token,通过令牌登陆dashboard
+kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep admin-user | awk '{print $1}')
+
 ```
 
 ```

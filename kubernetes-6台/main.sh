@@ -49,7 +49,8 @@ yum install -y kubelet-1.10.1-0.x86_64 kubeadm-1.10.1-0.x86_64 kubectl-1.10.1-0.
 
 
 ```
-kubeadm init --config=config.yaml --ignore-preflight-errors=FileAvailable--etc-kubernetes-manifests-etcd.yaml,ExternalEtcdVersion
+kubeadm init --config=config.yaml
+
 ```
 
 # 如果使用了kubeadm reset 需要将证书重新拷贝过去
