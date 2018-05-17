@@ -20,7 +20,7 @@ REGISTRY=registry.cn-hangzhou.aliyuncs.com
 ALIYUN_URL=${REGISTRY}/etrans
 COREOS_URL=quay.io/coreos
 CALICO_URL=quay.io/calico
-CEPH_URL=gcr.io/kubernetes-helm
+
 
 
 images=(
@@ -51,8 +51,15 @@ node:v3.0.5
 kube-controllers:v2.0.3
 )
 
+
+CEPH_URL=gcr.io/kubernetes-helm
 ceph_images=(
 tiller:v2.9.0
+)
+
+RDB_URL=quay.io/external_storage
+rbd_provisioner=(
+rbd-provisioner:v0.1.1
 )
 
 #docker login --username=${USERNAME} --password=${PASSWORD} ${REGISTRY}
@@ -83,5 +90,9 @@ for imageName in ${ceph_images[@]} ; do
   docker rmi $ALIYUN_URL/$imageName
 done
 
-# ceph pod rbd 
-docker pull quay.io/external_storage/rbd-provisioner
+
+for imageName in ${rbd_provisioner[@]} ; do
+  docker pull $ALIYUN_URL/$imageName
+  docker tag $ALIYUN_URL/$imageName $RDB_URL/$imageName
+  docker rmi $ALIYUN_URL/$imageName
+done

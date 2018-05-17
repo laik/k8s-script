@@ -62,6 +62,12 @@ ceph_images=(
 tiller:v2.9.0
 )
 
+
+RDB_URL=quay.io/external_storage
+rbd_provisioner=(
+rbd-provisioner:v0.1.1
+)
+
 docker login --username=${USERNAME} --password=${PASSWORD} registry.cn-hangzhou.aliyuncs.com
 
 for imageName in ${images[@]} ; do
@@ -89,6 +95,14 @@ done
 for imageName in ${ceph_images[@]} ; do
   docker pull $CEPH_URL/$imageName
   docker tag $CEPH_URL/$imageName $ALIYUN_URL/$imageName
+  docker push $ALIYUN_URL/$imageName
+  docker rmi $ALIYUN_URL/$imageName
+done
+
+
+for imageName in ${rbd_provisioner[@]} ; do
+  docker pull $RDB_URL/$imageName
+  docker tag $RDB_URL/$imageName $ALIYUN_URL/$imageName
   docker push $ALIYUN_URL/$imageName
   docker rmi $ALIYUN_URL/$imageName
 done
