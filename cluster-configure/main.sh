@@ -24,27 +24,17 @@ $ls /usr/local/bin/cfssl*
 cfssl cfssl-bundle cfssl-certinfo cfssljson cfssl-newkey cfssl-scan
 
 或 下载二进制安装
-
-$ wget https://pkg.cfssl.org/R1.2/cfssl_linux-amd64
-$ chmod +x cfssl_linux-amd64
-$ sudo mv cfssl_linux-amd64 /root/local/bin/cfssl
-
-$ wget https://pkg.cfssl.org/R1.2/cfssljson_linux-amd64
-$ chmod +x cfssljson_linux-amd64
-$ sudo mv cfssljson_linux-amd64 /root/local/bin/cfssljson
-
-$ wget https://pkg.cfssl.org/R1.2/cfssl-certinfo_linux-amd64
-$ chmod +x cfssl-certinfo_linux-amd64
-$ sudo mv cfssl-certinfo_linux-amd64 /root/local/bin/cfssl-certinfo
-
-$ export PATH=/root/local/bin:$PATH
+curl -o /usr/local/bin/cfssl https://pkg.cfssl.org/R1.2/cfssl_linux-amd64
+curl -o /usr/local/bin/cfssljson https://pkg.cfssl.org/R1.2/cfssljson_linux-amd64
+chmod +x /usr/local/bin/cfssl*
+export PATH=$PATH:/usr/local/bin
 
 
 # ETCD 配置
 参考 etcd.sh
 
 # kubeadm 启动
-kubeadm init --config config.yaml
+kubeadm init --config=config.yaml
 
 # 如果使用了kubeadm reset 需要将证书重新拷贝过去
 # cd /root/ssl && mkdir -p /etc/kubernetes/pki/etcd/ && cp etcd.pem etcd-key.pem ca.pem  /etc/kubernetes/pki/etcd/

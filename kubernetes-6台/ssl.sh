@@ -1,3 +1,18 @@
+
+export KUBEM1_NAME=k0
+export KUBEM2_NAME=k1
+export KUBEM3_NAME=k2
+export KUBEM4_NAME=k3
+export KUBEM5_NAME=k4
+export KUBEM6_NAME=k5
+export KUBEM1_IP=192.168.4.110
+export KUBEM2_IP=192.168.4.111
+export KUBEM3_IP=192.168.4.112
+export KUBEM4_IP=192.168.4.113
+export KUBEM5_IP=192.168.4.114
+export KUBEM6_IP=192.168.4.115
+
+
 mkdir /root/ssl
 cd /root/ssl
 cat >  ca-config.json <<EOF
@@ -91,3 +106,9 @@ scp -r /etc/kubernetes/pki/etcd/*.pem ${KUBEM3_NAME}:/etc/kubernetes/pki/etcd/
 scp -r /etc/kubernetes/pki/etcd/*.pem ${KUBEM4_NAME}:/etc/kubernetes/pki/etcd/
 scp -r /etc/kubernetes/pki/etcd/*.pem ${KUBEM5_NAME}:/etc/kubernetes/pki/etcd/
 scp -r /etc/kubernetes/pki/etcd/*.pem ${KUBEM6_NAME}:/etc/kubernetes/pki/etcd/
+	
+	
+	
+	
+	
+

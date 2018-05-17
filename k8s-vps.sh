@@ -56,6 +56,7 @@ etcd:v3.1.10
 calico_images=(
 node:v3.0.5
 kube-controllers:v2.0.3
+cni:v2.0.4
 )
 
 ceph_images=(
