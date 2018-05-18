@@ -34,5 +34,5 @@ tee /etc/docker/daemon.json <<-'EOF'
 EOF
 
 echo "启动 Docker................."
-systemctl daemon-reload && systemctl restart docker
 systemctl enable docker && systemctl start docker
+systemctl daemon-reload && systemctl restart docker

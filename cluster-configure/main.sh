@@ -50,6 +50,9 @@ kubectl taint nodes --all node-role.kubernetes.io/master-
 scp -r /etc/kubernetes/pki  kubem2:/etc/kubernetes/
 scp -r /etc/kubernetes/pki  kubem3:/etc/kubernetes/
 scp -r /etc/kubernetes/pki  kubem3:/etc/kubernetes/
+
+# kubem2 & kubem3使用同一份配置文件初始化加入集群 Master
+kubeadm init --config=config.yaml
  
 
 # 以下操作只在kubem1操作

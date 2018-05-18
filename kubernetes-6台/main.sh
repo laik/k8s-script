@@ -15,17 +15,16 @@ export KUBEM2_NAME=k1
 export KUBEM3_NAME=k2
 export KUBEM4_NAME=k3
 export KUBEM5_NAME=k4
-export KUBEM6_NAME=k5
-export KUBEM1_IP=192.168.4.110
-export KUBEM2_IP=192.168.4.111
-export KUBEM3_IP=192.168.4.112
-export KUBEM4_IP=192.168.4.113
-export KUBEM5_IP=192.168.4.114
-export KUBEM6_IP=192.168.4.115
-export CLUSTER_IP=192.168.4.100
+export KUBEM6_NAME=k5    
+export KUBEM1_IP=172.16.171.10
+export KUBEM2_IP=172.16.171.11
+export KUBEM3_IP=172.16.171.12
+export KUBEM4_IP=172.16.171.13
+export KUBEM5_IP=172.16.171.14
+export KUBEM6_IP=172.16.171.15
 export PEER_NAME=$(hostname)
-export PRIVATE_IP=$(ip addr show eth1 | grep -Po 'inet \K[\d.]+' | head -1)
-echo $KUBEM1_NAME $KUBEM2_NAME $KUBEM3_NAME $KUBEM1_IP $KUBEM2_IP $KUBEM3_IP $CLUSTER_IP $PEER_NAME $PRIVATE_IP
+export PRIVATE_IP=$(ip addr show eth2 | grep -Po 'inet \K[\d.]+' | head -1)
+
 
 
 ```
@@ -68,16 +67,16 @@ export KUBECONFIG=/etc/kubernetes/admin.conf && echo "export KUBECONFIG=/etc/kub
 kubectl taint nodes --all node-role.kubernetes.io/master-
 ```
 
-
 # 将kubeadm生成证书密码文件分发到 kubem2 和 kubem3 上面去
 ``` 
-
-
 scp -r /etc/kubernetes/pki  k1:/etc/kubernetes/
 scp -r /etc/kubernetes/pki  k2:/etc/kubernetes/
 scp -r /etc/kubernetes/pki  k3:/etc/kubernetes/
 scp -r /etc/kubernetes/pki  k4:/etc/kubernetes/
 scp -r /etc/kubernetes/pki  k5:/etc/kubernetes/
+
+# 然后在其他节点使用同一份配置文件
+kubeadm init --config config.yaml
 ```
 
 # 以下操作只在kubem1操作

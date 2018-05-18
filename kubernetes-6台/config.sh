@@ -54,4 +54,4 @@ featureGates:
 EOF
 
 
-kubeadm init --config=config.yaml
+kubeadm init --config config.yaml
