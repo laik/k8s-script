@@ -49,7 +49,7 @@ yum install -y kubelet-1.10.1-0.x86_64 kubeadm-1.10.1-0.x86_64 kubectl-1.10.1-0.
 
 
 ```
-kubeadm init --config=config.yaml
+kubeadm init --config config.yaml
 
 ```
 
@@ -71,8 +71,13 @@ kubectl taint nodes --all node-role.kubernetes.io/master-
 
 # 将kubeadm生成证书密码文件分发到 kubem2 和 kubem3 上面去
 ``` 
-scp -r /etc/kubernetes/pki  kubem2:/etc/kubernetes/
-scp -r /etc/kubernetes/pki  kubem3:/etc/kubernetes/
+
+
+scp -r /etc/kubernetes/pki  k1:/etc/kubernetes/
+scp -r /etc/kubernetes/pki  k2:/etc/kubernetes/
+scp -r /etc/kubernetes/pki  k3:/etc/kubernetes/
+scp -r /etc/kubernetes/pki  k4:/etc/kubernetes/
+scp -r /etc/kubernetes/pki  k5:/etc/kubernetes/
 ```
 
 # 以下操作只在kubem1操作

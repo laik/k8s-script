@@ -49,6 +49,7 @@ kubectl taint nodes --all node-role.kubernetes.io/master-
  
 scp -r /etc/kubernetes/pki  kubem2:/etc/kubernetes/
 scp -r /etc/kubernetes/pki  kubem3:/etc/kubernetes/
+scp -r /etc/kubernetes/pki  kubem3:/etc/kubernetes/
  
 
 # 以下操作只在kubem1操作
