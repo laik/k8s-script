@@ -40,7 +40,7 @@ wget -O centos7-setting.sh https://raw.githubusercontent.com/laik/k8s-script/mas
 
 wget -O docker-ce.sh https://raw.githubusercontent.com/laik/k8s-script/master/docker-ce.sh && sh docker-ce.sh
 
-wget -O kubelet.sh https://raw.githubusercontent.com/laik/k8s-script/master/docker-ce.sh && sh kubelet.sh
+wget -O kubelet.sh https://raw.githubusercontent.com/laik/k8s-script/master/kubelet-ce.sh && sh kubelet.sh
 
 echo "执行下载镜像脚本"
 MY_PASSWORD=W123455
