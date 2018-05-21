@@ -154,6 +154,7 @@ kube-system   kubernetes-dashboard   NodePort    10.102.52.30   <none>        44
 
 > 1. cni 问题 Container runtime network not ready: NetworkReady=false reason:NetworkPluginNotReady message:docker: network plugin is not ready: cni config uninitialized
 >> 删除 /etc/systemd/system/kubelet.service.d/10-kubeadm.conf 中的$ KUBELET_NETWORK_ARGS 参数之后执行
+>> 或者 直接安装 Clico 依赖 CNI 容器提供 CNI
 `systemctl daemon-reload && systemctl restart kubelet`
 
 

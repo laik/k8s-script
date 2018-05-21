@@ -11,9 +11,10 @@ ssh-copy-id node5
 ssh node1
 
 
+# 注意在控制服务器上加,先测试下不要加错,不然错误多多......
 # all node 国内加速
 cat >> ~/.bashrc <<EOF
-export CEPH_DEPLOY_REPO_URL=http://mirrors.163.com/ceph/debian-jewel 
+export CEPH_DEPLOY_REPO_URL=http://mirrors.163.com/ceph/rpm-jewel/el7
 export CEPH_DEPLOY_GPG_URL=http://mirrors.163.com/ceph/keys/release.asc
 EOF
 
@@ -37,37 +38,6 @@ chmod 0440 /etc/sudoers.d/cephnode
 yum install ntp ntpdate ntp-doc -y
 crontab -e
 */1 * * * * /usr/sbin/ntpdate s2c.time.edu.cn > /dev/null 2>&1
-
-
-# add 163 yum repo
-echo '#...
-[ceph]
-name=Ceph packages for $basearch
-baseurl=http://mirrors.163.com/ceph/rpm-jewel/el7/\$basearch
-enabled=1
-gpgcheck=0
-type=rpm-md
-gpgkey=https://mirrors.163.com/ceph/keys/release.asc
-priority=1
-
-[ceph-noarch]
-name=Ceph noarch packages
-baseurl=http://mirrors.163.com/ceph/rpm-jewel/el7/noarch
-enabled=1
-gpgcheck=0
-type=rpm-md
-gpgkey=https://mirrors.163.com/ceph/keys/release.asc
-priority=1
-
-[ceph-source]
-name=Ceph source packages
-baseurl=http://mirrors.163.com/ceph/rpm-jewel/el7/SRPMS
-enabled=1
-gpgcheck=0
-type=rpm-md
-gpgkey=https://mirrors.163.com/ceph/keys/release.asc
-priority=1' >> /etc/yum.repos.d/ceph.repo
-
 
 
 # node1 install ceph-deploy
@@ -95,12 +65,23 @@ lsblk
 parted  -s  /dev/sdb  mklabel gpt
 parted /dev/sdb mkpart primary ext4 0 60G
 
+# 
+
+ssh k0 -n "mkdir /var/local/osd0 && chown -R 777 /var/local/osd0 && exit"
+ssh k2 -n "mkdir /var/local/osd0 && chown -R 777 /var/local/osd0 && exit"
+ssh k4 -n "mkdir /var/local/osd0 && chown -R 777 /var/local/osd0 && exit"
+ssh k5 -n "mkdir /var/local/osd0 && chown -R 777 /var/local/osd0 && exit"
+
 # new nodes mon
 ceph-deploy new ceph1 ceph2 ceph3 
-
+# clsuter -6 config
+# ceph-deploy new --cluster-network 172.16.171.0/24 --public-network 192.168.4.0/24 k2 k4 k5
 ceph-deploy install ceph1 ceph2 ceph3
 
+echo "osd pool default size = 3" | tee -a ceph.conf
+
 ceph-deploy mon create-initial
+
 # 在第一次清除 PurgeData 之后,发生admin_socket: exception getting command descriptions: [Errno 2] No such file or directory
 rm -rf /etc/ceph/*
 rm -rf /var/lib/ceph/*/*

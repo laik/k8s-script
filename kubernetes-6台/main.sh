@@ -67,13 +67,11 @@ export KUBECONFIG=/etc/kubernetes/admin.conf && echo "export KUBECONFIG=/etc/kub
 kubectl taint nodes --all node-role.kubernetes.io/master-
 ```
 
-# 将kubeadm生成证书密码文件分发到 kubem2 和 kubem3 上面去
+# 将kubeadm生成证书密码文件分发到 k3 上面去
 ``` 
-scp -r /etc/kubernetes/pki  k1:/etc/kubernetes/
-scp -r /etc/kubernetes/pki  k2:/etc/kubernetes/
+
 scp -r /etc/kubernetes/pki  k3:/etc/kubernetes/
-scp -r /etc/kubernetes/pki  k4:/etc/kubernetes/
-scp -r /etc/kubernetes/pki  k5:/etc/kubernetes/
+
 
 # 然后在其他节点使用同一份配置文件
 kubeadm init --config config.yaml
@@ -105,4 +103,20 @@ kubectl create -f heapster-all.yaml
 #.... 安装插件....等等..... 
 
 #初始化 m2 m3
+```
+
+
+
+
+## 常用命令
+
+```Shell
+kubectl get po -o wide --all-namespaces
+
+# 查看 Master join Token
+kubeadm token create --print-join-command
+
+# 获取token,通过令牌登陆dashboard
+kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep admin-user | awk '{print $1}')
+
 ```
