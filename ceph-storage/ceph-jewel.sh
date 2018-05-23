@@ -18,6 +18,8 @@ export CEPH_DEPLOY_REPO_URL=http://mirrors.163.com/ceph/rpm-jewel/el7
 export CEPH_DEPLOY_GPG_URL=http://mirrors.163.com/ceph/keys/release.asc
 EOF
 
+
+
 # add dns
 cat >> /etc/resolv.conf<<EOF
 nameserver 202.96.128.166
@@ -37,7 +39,7 @@ chmod 0440 /etc/sudoers.d/cephnode
 # install ntp server sync
 yum install ntp ntpdate ntp-doc -y
 crontab -e
-*/1 * * * * /usr/sbin/ntpdate s2c.time.edu.cn > /dev/null 2>&1
+*/1 * * * * /usr/sbin/ntpdate time7.aliyun.com >/dev/null 2>&1
 
 
 # node1 install ceph-deploy

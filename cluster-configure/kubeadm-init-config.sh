@@ -9,9 +9,6 @@ etcd:
   - https://${KUBEM1_IP}:2379
   - https://${KUBEM2_IP}:2379
   - https://${KUBEM3_IP}:2379
-  - https://${KUBEM4_IP}:2379
-  - https://${KUBEM5_IP}:2379
-  - https://${KUBEM6_IP}:2379
   caFile: /etc/kubernetes/pki/etcd/ca.pem
   certFile: /etc/kubernetes/pki/etcd/etcd.pem
   keyFile: /etc/kubernetes/pki/etcd/etcd-key.pem

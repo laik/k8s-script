@@ -44,8 +44,8 @@ kubectl taint nodes --all node-role.kubernetes.io/master-
 
 # 将kubeadm生成证书密码文件分发到 kubem2 和 kubem3 上面去
 ``` 
-scp -r /etc/kubernetes/pki  kubem2:/etc/kubernetes/
-scp -r /etc/kubernetes/pki  kubem3:/etc/kubernetes/
+scp -r /etc/kubernetes/pki  ${KUBEM2_NAME}:/etc/kubernetes/
+scp -r /etc/kubernetes/pki  ${KUBEM3_NAME}:/etc/kubernetes/
 ```
 
 # 以下操作只在kubem1操作

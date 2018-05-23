@@ -1,5 +1,5 @@
 # kube v1.10.1 安装etcd 3.1.12
-yum install 3.1.12 -y
+yum install etcd-3.2.12-1.el7.x86_64 -y
 
 
 # service 

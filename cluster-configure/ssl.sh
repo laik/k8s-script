@@ -31,8 +31,8 @@ cat >  ca-csr.json <<EOF
 "names": [
 {
   "C": "CN",
-  "ST": "shanghai",
-  "L": "shanghai",
+  "ST": "guangzhou",
+  "L": "guangzhou",
   "O": "k8s",
   "OU": "System"
 }
@@ -72,6 +72,11 @@ cfssl gencert -ca=ca.pem \
   -config=ca-config.json \
   -profile=kubernetes-Soulmate etcd-csr.json | cfssljson -bare etcd
   
+
+#检验证书
+openssl x509  -noout -text -in etcd.pem
+openssl x509  -noout -text -in etcd-key.pem
+openssl x509  -noout -text -in ca.pem
 
 # 3.kubem1分发etcd证书到kubem2,kubem3
 cd /root/ssl
