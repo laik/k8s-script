@@ -125,6 +125,10 @@ rbd create rbdpool/rbdpoolimages --size 102400
 在内核为3.10的不能实现绝大部分features，使用此命令 在后边加上 --image-format 2 --image-feature  layering
 
 
+echo "rbd_default_features = 1 " >> ceph.conf     
+echo "public_network = 172.16.171.0/24" >> ceph.conf   
+echo "mon_pg_warn_max_per_osd = 1000" >> ceph.conf
+
 3、查看相关pool以及image信息
 查看池中信息
 rbd ls rbdpool

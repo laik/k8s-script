@@ -19,7 +19,7 @@ wget -O docker-ce.sh https://raw.githubusercontent.com/laik/k8s-script/master/do
 wget -O kubelet.sh https://raw.githubusercontent.com/laik/k8s-script/master/kubelet.sh && sh kubelet.sh
 
 echo "执行下载镜像脚本"
-MY_PASSWORD=Apple336363
+MY_PASSWORD=XXASD!@#dashboarX
 docker login --username=etransk8s --password=${MY_PASSWORD} registry.cn-hangzhou.aliyuncs.com
 
 wget -O k8s-dev.sh https://raw.githubusercontent.com/laik/k8s-script/master/k8s-dev.sh && chmod +x k8s-dev.sh && sh k8s-dev.sh && cd ~
@@ -63,9 +63,8 @@ kubectl taint nodes --all node-role.kubernetes.io/master-
 
 # 将kubeadm生成证书密码文件分发到 kubem2 和 kubem3 上面去
  
-scp -r /etc/kubernetes/pki  kubem2:/etc/kubernetes/
-scp -r /etc/kubernetes/pki  kubem3:/etc/kubernetes/
-scp -r /etc/kubernetes/pki  kubem3:/etc/kubernetes/
+scp -r /etc/kubernetes/pki  ${KUBEM2_NAME}:/etc/kubernetes/
+scp -r /etc/kubernetes/pki  ${KUBEM3_NAME}:/etc/kubernetes/
 
 # kubem2 & kubem3使用同一份配置文件初始化加入集群 Master
 kubeadm init --config=config.yaml

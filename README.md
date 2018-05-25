@@ -75,7 +75,8 @@ export KUBECONFIG=/etc/kubernetes/admin.conf && echo "export KUBECONFIG=/etc/kub
 # addons 
 接下来要注意，我们必须自己来安装一个network addon。network addon必须在任何app部署之前安装好。同样的，kube-dns也会在network addon安装好之后才启动 kubeadm只支持CNI-based networks（不支持kubenet）。比较常见的network addon有：Calico, Canal, Flannel, Kube-router, Romana, Weave Net等。这里我们使用Calico。
 
-# 以下两个网络组件可以选择一个安装,或者两个都安装
+# 以下两个网络组件可以选择一个安装
+
 ## 用 weave net 安装方法
 export kubever=$(kubectl version | base64 | tr -d '\n')
 kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$kubever"
