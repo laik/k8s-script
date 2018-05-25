@@ -34,6 +34,7 @@ wget -O k8s-dev.sh https://raw.githubusercontent.com/laik/k8s-script/master/k8s-
 # 配置 ssl(必要配置)
 
 ### 如果没有 cfssl,需要下载安装
+```
 $yum install golang git -y
 $export GOPATH=/usr/local
 $go get -u github.com/cloudflare/cfssl/cmd/...
@@ -45,6 +46,7 @@ curl -o /usr/local/bin/cfssl https://pkg.cfssl.org/R1.2/cfssl_linux-amd64
 curl -o /usr/local/bin/cfssljson https://pkg.cfssl.org/R1.2/cfssljson_linux-amd64
 chmod +x /usr/local/bin/cfssl*
 export PATH=$PATH:/usr/local/bin
+```
 
 参考 ssl.sh
 
