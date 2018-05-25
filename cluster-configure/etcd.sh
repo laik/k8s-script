@@ -1,5 +1,5 @@
 # kube v1.10.1 安装etcd 3.1.12
-yum install etcd-3.2.12-1.el7.x86_64 -y
+yum install etcd-3.2.15-1.el7.x86_64 -y
 
 
 # service 
@@ -47,3 +47,7 @@ systemctl enable etcd
 
 # 启动后 check
 etcdctl --cert-file=/etc/kubernetes/pki/etcd/etcd.pem  --key-file=/etc/kubernetes/pki/etcd/etcd-key.pem --ca-file=/etc/kubernetes/pki/etcd/ca.pem --endpoints=https://192.168.4.240:2379,https://192.168.4.241:2379,https://192.168.4.242:2379 cluster-health
+
+# or 声明了ectdctl api =3 需要清除才能用kubeadm init 不然会有一系列想像不到的后果
+export ETCDCTL_API=3
+etcdctl --cert=/etc/kubernetes/pki/etcd/etcd.pem  --key=/etc/kubernetes/pki/etcd/etcd-key.pem --cacert=/etc/kubernetes/pki/etcd/ca.pem --endpoints=[192.168.5.251:2379,192.168.5.252:2379] member list

@@ -12,10 +12,40 @@ export PRIVATE_IP=$(ip addr show eth1 | grep -Po 'inet \K[\d.]+' | head -1)
 echo $KUBEM1_NAME $KUBEM2_NAME $KUBEM3_NAME $KUBEM1_IP $KUBEM2_IP $KUBEM3_IP $CLUSTER_IP $PEER_NAME $PRIVATE_IP
 ```
 
+# 安装预设 (如果是 Vagrant 提供 Virtual 不需要重复执行)
+
+wget -O centos7-setting.sh https://raw.githubusercontent.com/laik/k8s-script/master/centos7-setting.sh && sh centos7-setting.sh
+
+wget -O docker-ce.sh https://raw.githubusercontent.com/laik/k8s-script/master/docker-ce.sh && sh docker-ce.sh
+
+wget -O kubelet.sh https://raw.githubusercontent.com/laik/k8s-script/master/kubelet.sh && sh kubelet.sh
+
+echo "执行下载镜像脚本"
+MY_PASSWORD=XXASD!@#dashboarX
+docker login --username=etransk8s --password=${MY_PASSWORD} registry.cn-hangzhou.aliyuncs.com
+
+wget -O k8s-dev.sh https://raw.githubusercontent.com/laik/k8s-script/master/k8s-dev.sh && chmod +x k8s-dev.sh && sh k8s-dev.sh && cd ~
+
+
+
 # 配置keepalived 
 参考 keepalived.sh
 
 # 配置 ssl(必要配置)
+
+### 如果没有 cfssl,需要下载安装
+$yum install golang git -y
+$export GOPATH=/usr/local
+$go get -u github.com/cloudflare/cfssl/cmd/...
+$ls /usr/local/bin/cfssl*
+cfssl cfssl-bundle cfssl-certinfo cfssljson cfssl-newkey cfssl-scan
+
+或 下载二进制安装
+curl -o /usr/local/bin/cfssl https://pkg.cfssl.org/R1.2/cfssl_linux-amd64
+curl -o /usr/local/bin/cfssljson https://pkg.cfssl.org/R1.2/cfssljson_linux-amd64
+chmod +x /usr/local/bin/cfssl*
+export PATH=$PATH:/usr/local/bin
+
 参考 ssl.sh
 
 # ETCD 配置
@@ -46,6 +76,11 @@ kubectl taint nodes --all node-role.kubernetes.io/master-
 ``` 
 scp -r /etc/kubernetes/pki  ${KUBEM2_NAME}:/etc/kubernetes/
 scp -r /etc/kubernetes/pki  ${KUBEM3_NAME}:/etc/kubernetes/
+```
+
+# kubem2 & kubem3使用同一份配置文件初始化加入集群 Master
+```
+kubeadm init --config kubeadm-init-onfig.yaml
 ```
 
 # 以下操作只在kubem1操作
