@@ -1,7 +1,7 @@
 # 写配置文件
 cd /etc/kubernetes/
 
-cat <<EOF > config.yaml 
+cat <<EOF > kubeadm-init-config.yaml 
 apiVersion: kubeadm.k8s.io/v1alpha1
 kind: MasterConfiguration
 etcd:

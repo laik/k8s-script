@@ -1,5 +1,7 @@
 #需要做一些处理,如果是kubum1 那么unicast_peer 的地址是另外两个
 
+
+#注意配置网卡 interface em1
 cat <<EOF > /etc/keepalived/keepalived.conf
 global_defs {
    router_id LVS_k8s

@@ -83,6 +83,6 @@ cd /root/ssl
 mkdir -p /etc/kubernetes/pki/etcd/
 cp etcd.pem etcd-key.pem ca.pem  /etc/kubernetes/pki/etcd/
 ssh -n ${KUBEM2_NAME} "mkdir -p /etc/kubernetes/pki/etcd/ && rm -rf etc/kubernetes/pki/etcd/* && exit"
-ssh -n ${KUBEM3_NAME} "mkdir -p /etc/kubernetes/pki/etcd/ && && rm -rf etc/kubernetes/pki/etcd/* && exit"
+ssh -n ${KUBEM3_NAME} "mkdir -p /etc/kubernetes/pki/etcd/ && rm -rf etc/kubernetes/pki/etcd/* && exit"
 scp -r /etc/kubernetes/pki/etcd/*.pem ${KUBEM2_NAME}:/etc/kubernetes/pki/etcd/
 scp -r /etc/kubernetes/pki/etcd/*.pem ${KUBEM3_NAME}:/etc/kubernetes/pki/etcd/

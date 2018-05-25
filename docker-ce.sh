@@ -24,7 +24,11 @@ yum makecache fast
 
 echo "yum install docker-ce"
 
-yum install docker-ce -y
+# kubernetes 1.10.1 支持最大版本 17.03
+
+yum install https://download.docker.com/linux/centos/7/x86_64/stable/Packages/docker-ce-selinux-17.03.2.ce-1.el7.centos.noarch.rpm -y
+
+yum install docker-ce-17.03.2.ce-1.el7.centos -y
 
 echo "使用阿里云加速器"
 tee /etc/docker/daemon.json <<-'EOF'
