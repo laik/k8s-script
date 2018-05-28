@@ -55,6 +55,9 @@ export PATH=$PATH:/usr/local/bin
 
 # kubeadm 启动
 ```
+cd /etc/kubernetes/
+wget https://raw.githubusercontent.com/laik/k8s-script/master/cluster-configure/kubeadm-init-config.sh
+sh kubeadm-init-config.sh
 kubeadm init --config kubeadm-init-config.yaml
 ```
 
@@ -74,17 +77,6 @@ kubectl taint nodes --all node-role.kubernetes.io/master-
 ```
 
 
-# 将kubeadm生成证书密码文件分发到 kubem2 和 kubem3 上面去
-``` 
-scp -r /etc/kubernetes/pki  ${KUBEM2_NAME}:/etc/kubernetes/
-scp -r /etc/kubernetes/pki  ${KUBEM3_NAME}:/etc/kubernetes/
-```
-
-# kubem2 & kubem3使用同一份配置文件初始化加入集群 Master
-```
-kubeadm init --config kubeadm-init-onfig.yaml
-```
-
 # 以下操作只在kubem1操作
 # ------------------------------------
 # 以下两个网络组件可以选择一个安装,或者两个都安装
@@ -93,22 +85,35 @@ kubeadm init --config kubeadm-init-onfig.yaml
 ```
 export kubever=$(kubectl version | base64 | tr -d '\n')
 kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$kubever"
-systemctl restart docker && systemctl restart kubelet
+
+or
 
 ## 用 Calico 作为网络传输层
 kubectl apply -f https://raw.githubusercontent.com/laik/k8s-script/master/calico.yaml
-systemctl restart docker && systemctl restart kubelet
+
+#heapster
+kubectl create -f https://raw.githubusercontent.com/laik/k8s-script/master/cluster-configure/heapster-all.yaml
 
 #dashboard
-kubectl create -f kube-dashboard.yaml
+kubectl create -f https://raw.githubusercontent.com/laik/k8s-script/master/cluster-configure/kubernetes-dashboard.yaml
 
 #获取token,通过令牌登陆
 kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep admin-user | awk '{print $1}')
+```
 
-#heapster 安装
-kubectl create -f heapster-all.yaml
 
-#.... 安装插件....等等..... 
 
-#初始化 m2 m3
+# 初始化 m2 m3,将kubeadm生成证书密码文件分发到 kubem2 和 kubem3 上面去
+
+``` 
+scp -r /etc/kubernetes/pki  ${KUBEM2_NAME}:/etc/kubernetes/
+scp -r /etc/kubernetes/pki  ${KUBEM3_NAME}:/etc/kubernetes/
+```
+
+# kubem2 & kubem3使用同一份配置文件初始化加入集群 Master
+```
+cd /etc/kubernetes/
+wget https://raw.githubusercontent.com/laik/k8s-script/master/cluster-configure/kubeadm-init-config.sh
+sh kubeadm-init-config.sh
+kubeadm init --config kubeadm-init-config.yaml
 ```
