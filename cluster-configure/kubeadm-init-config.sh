@@ -14,7 +14,7 @@ etcd:
   keyFile: /etc/kubernetes/pki/etcd/etcd-key.pem
   dataDir: /var/lib/etcd
 networking:
-  podSubnet: 10.244.0.0/16
+  podSubnet: 192.168.0.0/16
 kubernetesVersion: 1.10.1
 api:
   advertiseAddress: "${PRIVATE_IP}"

@@ -1,14 +1,15 @@
+# 关闭ipv6
+cat <<EOF >/etc/sysctl.conf
+net.ipv6.conf.all.disable_ipv6 = 1
+net.ipv6.conf.default.disable_ipv6 = 1
+EOF
+
+sysctl -p
+
 # admin node
 su - cephnode
 ssh-keygen -t rsa -N '' -f ~/.ssh/id_rsa -q
-
-# copy rsa to all
-ssh-copy-id node1
-ssh-copy-id node2
-ssh-copy-id node3
-ssh-copy-id node4
-ssh-copy-id node5
-ssh node1
+ssh-copy-id ...
 
 
 # 注意在控制服务器上加,先测试下不要加错,不然错误多多......
@@ -18,7 +19,10 @@ export CEPH_DEPLOY_REPO_URL=http://mirrors.163.com/ceph/rpm-jewel/el7
 export CEPH_DEPLOY_GPG_URL=http://mirrors.163.com/ceph/keys/release.asc
 EOF
 
-
+cat >> ~/.bashrc <<EOF
+export CEPH_DEPLOY_REPO_URL=http://hk.ceph.com/rpm-jewel/el7
+export CEPH_DEPLOY_GPG_URL=http://hk.ceph.com/keys/release.asc
+EOF
 
 # add dns
 cat >> /etc/resolv.conf<<EOF
@@ -53,6 +57,14 @@ ceph-deploy purgedata {ceph-node} [{ceph-node}]
 ceph-deploy forgetkeys
 rm ceph.*
 
+# 清除 PurgeData 之后,发生admin_socket: exception getting command descriptions: [Errno 2] No such file or directory
+rm -rf /etc/ceph/*
+rm -rf /var/lib/ceph/*/*
+rm -rf /var/log/ceph/*
+rm -rf /var/run/ceph/*
+
+
+
 # As a first exercise, create a Ceph Storage Cluster with one Ceph Monitor and three Ceph OSD Daemons. Once the cluster reaches a active + clean state, expand it by adding a fourth Ceph OSD Daemon, a Metadata Server and two more Ceph Monitors. For best results, create a directory on your admin node for maintaining the configuration files and keys that ceph-deploy generates for your cluster.
 # 作为第一个练习，使用一个Ceph Monitor和三个Ceph OSD守护进程创建一个Ceph存储集群。 一旦集群达到 active+clean 状态，
 # 通过添加第四个Ceph OSD守护程序，元数据服务器和两个Ceph监视器来扩展集群。 
@@ -66,37 +78,35 @@ cd my-cluster
 lsblk
 parted  -s  /dev/sdb  mklabel gpt
 parted /dev/sdb mkpart primary ext4 0 60G
-
-# 
-
+#....
 ssh k0 -n "mkdir /var/local/osd0 && chown -R 777 /var/local/osd0 && exit"
 ssh k2 -n "mkdir /var/local/osd0 && chown -R 777 /var/local/osd0 && exit"
 ssh k4 -n "mkdir /var/local/osd0 && chown -R 777 /var/local/osd0 && exit"
 ssh k5 -n "mkdir /var/local/osd0 && chown -R 777 /var/local/osd0 && exit"
 
 # new nodes mon
-ceph-deploy new ceph1 ceph2 ceph3 
-# clsuter -6 config
-# ceph-deploy new --cluster-network 172.16.171.0/24 --public-network 192.168.4.0/24 k2 k4 k5
-ceph-deploy install ceph1 ceph2 ceph3
+ceph-deploy new master2
 
 echo "osd pool default size = 3" | tee -a ceph.conf
+echo "rbd_default_features = 1 " >> ceph.conf     
+echo "public_network = 192.168.4.0/24" >> ceph.conf   
+echo "mon_pg_warn_max_per_osd = 1000" >> ceph.conf
+
+#ceph-deploy new --cluster-network 172.16.171.0/24 --public-network 192.168.4.0/24
+ceph-deploy install master2
+# 或者每个节点
+yum -y install ceph ceph-radosgw
 
 ceph-deploy mon create-initial
-
-# 在第一次清除 PurgeData 之后,发生admin_socket: exception getting command descriptions: [Errno 2] No such file or directory
-rm -rf /etc/ceph/*
-rm -rf /var/lib/ceph/*/*
-rm -rf /var/log/ceph/*
-rm -rf /var/run/ceph/*
-
-
-
-ceph-deploy mon add ceph1 ceph2 ceph3 
 
 # jewel 下可以用
 ceph-deploy osd prepare ceph1:/dev/sdb1 ceph2:/dev/sdb1 ceph3:/dev/sdb1
 ceph-deploy osd activate ceph1:/dev/sdb1 ceph2:/dev/sdb1 ceph3:/dev/sdb1
+
+
+# add mon
+ceph-deploy mon add ceph1 ceph2 ceph3 
+
 
 # Luminous 
 ceph-deploy  --version
@@ -125,9 +135,6 @@ rbd create rbdpool/rbdpoolimages --size 102400
 在内核为3.10的不能实现绝大部分features，使用此命令 在后边加上 --image-format 2 --image-feature  layering
 
 
-echo "rbd_default_features = 1 " >> ceph.conf     
-echo "public_network = 172.16.171.0/24" >> ceph.conf   
-echo "mon_pg_warn_max_per_osd = 1000" >> ceph.conf
 
 3、查看相关pool以及image信息
 查看池中信息
@@ -208,3 +215,44 @@ rados df
 rados lspools 
 # 集群信息
 ceph osd tree
+
+# 获取key base64 
+ceph auth get-key client.admin | base64
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: ceph-secret-rbd
+type: "kubernetes.io/rbd"
+data:
+  key: QVFCTTJRdGJobVRoRUJBQW55UmZFeWROZ2NvWDVULzFwbE5yaEE9PQ==
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: ceph-secret
+  namespace: kube-system
+type: "kubernetes.io/rbd"
+data:
+  # ceph auth add client.kube mon 'allow r' osd 'allow rwx pool=kube'
+  # ceph auth get-key client.kube | base64
+  key: QVFDNDNRdGJEcHlvSFJBQUVxTVhBelkra3lkRGZVNEhiaG96R3c9PQ==
+
+
+
+前提:
+将 /u06目录授权
+chown -R 777 /u06
+chown -R ceph:ceph /u06
+----
+ceph-deploy new master1 master2 --public-network=192.168.4.0/24 --cluster-network=172.16.171.0/24
+
+ceph-deploy install master1 master2
+
+ceph-deploy mon create-initial
+
+ceph-deploy osd prepare master1:/u06 master2:/u06
+
+ceph-deploy osd activate master1:/u06 master2:/u06
+
+

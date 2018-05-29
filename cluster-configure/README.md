@@ -80,14 +80,10 @@ kubectl taint nodes --all node-role.kubernetes.io/master-
 # 以下操作只在kubem1操作
 # ------------------------------------
 # 以下两个网络组件可以选择一个安装,或者两个都安装
+需要注意 初始化的网段,每个cni组件支持的网络不一样(我这里使用192.168.0.0/16 - clico 组件支持)
+参考: https://kubernetes.io/docs/setup/independent/create-cluster-kubeadm/#pod-network
 
-## 用 weave net 安装方法
 ```
-export kubever=$(kubectl version | base64 | tr -d '\n')
-kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$kubever"
-
-or
-
 ## 用 Calico 作为网络传输层
 kubectl apply -f https://raw.githubusercontent.com/laik/k8s-script/master/calico.yaml
 

@@ -401,6 +401,15 @@ kube-system   kubernetes-dashboard   NodePort    10.102.52.30   <none>        44
 
 ---
 
+### 
+kubernetes（k8s）DNS 服务反复重启解决：
+k8s.io/dns/pkg/dns/dns.go:150: Failed to list *v1.Service: Get https://10.96.0.1:443/api/v1/services?resourceVersion=0: dial tcp 10.96.0.1:443: getsockopt: no route to host
+
+
+
+# systemctl stop kubelet && systemctl stop docker
+# iptables --flush && iptables -tnat --flush
+# systemctl start kubelet && systemctl start docker
 
 ## 常用命令
 
@@ -413,6 +422,8 @@ kubeadm token create --print-join-command
 # 获取token,通过令牌登陆dashboard
 kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep admin-user | awk '{print $1}')
 
+# 查看 Docker log
+docker inspect $(docker ps -a | grep dashboard | awk '{print $1}' |head -1) | grep logpath
 ```
 
 ```
