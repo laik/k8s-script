@@ -1,3 +1,54 @@
+#! /bin/bash
+
+# 红帽包管理工具（RPM）¶  安装 Ceph
+sudo yum install -y yum-utils && sudo yum-config-manager --add-repo https://dl.fedoraproject.org/pub/epel/7/x86_64/ && sudo yum install --nogpgcheck -y epel-release && sudo rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7 && sudo rm /etc/yum.repos.d/dl.fedoraproject.org*
+
+sudo yum update && sudo yum install ceph-deploy  ntp ntpdate ntp-doc -y
+
+
+# 优先级/首选项 确保你的包管理器安装了优先级/首选项包且已启用。在 CentOS 上你也许得安装 EPEL ，在 RHEL 上你也许得启用可选软件库。
+
+sudo yum install yum-plugin-priorities -y 
+# 比如在 RHEL 7 服务器上，可用下列命令安装 yum-plugin-priorities并启用 rhel-7-server-optional-rpms 软件库：
+
+sudo yum install yum-plugin-priorities --enablerepo=rhel-7-server-optional-rpms
+
+
+
+
+
+
+[ceph]
+name=ceph
+baseurl=http://mirrors.163.com/ceph/rpm-luminous/el7/x86_64/
+gpgcheck=0
+[ceph-noarch]
+name=cephnoarch
+baseurl=http://mirrors.163.com/ceph/rpm-luminous/el7/noarch/
+gpgcheck=0
+
+
+echo "关闭防火墙"
+systemctl disable firewalld.service
+systemctl stop firewalld.service
+
+echo "关闭Selinux"
+setenforce  0
+echo 'sed -i "s/^SELINUX=enforcing/SELINUX=disabled/g" /etc/sysconfig/selinux
+sed -i "s/^SELINUX=enforcing/SELINUX=disabled/g" /etc/selinux/config
+sed -i "s/^SELINUX=permissive/SELINUX=disabled/g" /etc/sysconfig/selinux
+sed -i "s/^SELINUX=permissive/SELINUX=disabled/g" /etc/selinux/config'| sh
+getenforce
+
+
+#优先级/首选项
+#确保你的包管理器安装了优先级/首选项包且已启用。在 CentOS 上你也许得安装 EPEL ，在 RHEL 上你也许得启用可选软件库。
+
+sudo yum install yum-plugin-priorities
+#如在 RHEL 7 服务器上，可用下列命令安装 yum-plugin-priorities并启用 rhel-7-server-optional-rpms 软件库：
+
+sudo yum install yum-plugin-priorities --enablerepo=rhel-7-server-optional-rpms
+
 # 关闭ipv6
 cat <<EOF >/etc/sysctl.conf
 net.ipv6.conf.all.disable_ipv6 = 1
@@ -18,7 +69,7 @@ cat >> ~/.bashrc <<EOF
 export CEPH_DEPLOY_REPO_URL=http://mirrors.163.com/ceph/rpm-jewel/el7
 export CEPH_DEPLOY_GPG_URL=http://mirrors.163.com/ceph/keys/release.asc
 EOF
-
+#或者香港
 cat >> ~/.bashrc <<EOF
 export CEPH_DEPLOY_REPO_URL=http://hk.ceph.com/rpm-jewel/el7
 export CEPH_DEPLOY_GPG_URL=http://hk.ceph.com/keys/release.asc
@@ -62,6 +113,21 @@ rm -rf /etc/ceph/*
 rm -rf /var/lib/ceph/*/*
 rm -rf /var/log/ceph/*
 rm -rf /var/run/ceph/*
+
+前提:
+将 /u06目录授权
+chown -R 777 /u06
+chown -R ceph:ceph /u06
+----
+ceph-deploy new master1 master2 --public-network=192.168.4.0/24 --cluster-network=172.16.171.0/24
+
+ceph-deploy install master1 master2
+
+ceph-deploy mon create-initial
+
+ceph-deploy osd prepare master1:/u06 master2:/u06
+
+ceph-deploy osd activate master1:/u06 master2:/u06
 
 
 
@@ -240,19 +306,6 @@ data:
 
 
 
-前提:
-将 /u06目录授权
-chown -R 777 /u06
-chown -R ceph:ceph /u06
-----
-ceph-deploy new master1 master2 --public-network=192.168.4.0/24 --cluster-network=172.16.171.0/24
 
-ceph-deploy install master1 master2
-
-ceph-deploy mon create-initial
-
-ceph-deploy osd prepare master1:/u06 master2:/u06
-
-ceph-deploy osd activate master1:/u06 master2:/u06
 
 
