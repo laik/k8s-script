@@ -85,8 +85,18 @@ kubectl taint nodes --all node-role.kubernetes.io/master-
 
 ```
 ## 用 Calico 作为网络传输层
+
 kubectl apply -f https://raw.githubusercontent.com/laik/k8s-script/master/calico.yaml
 
+####或者
+
+kubectl apply -f https://docs.projectcalico.org/v3.1/getting-started/kubernetes/installation/hosted/rbac-kdd.yaml
+wget https://docs.projectcalico.org/v3.1/getting-started/kubernetes/installation/hosted/kubernetes-datastore/calico-networking/1.7/calico.yaml
+
+sed -i 's/192.168.0.0/10.244.0.0/g' calico.yaml
+
+kubectl create -f calico.yaml
+```
 #heapster
 kubectl create -f https://raw.githubusercontent.com/laik/k8s-script/master/cluster-configure/heapster-all.yaml
 

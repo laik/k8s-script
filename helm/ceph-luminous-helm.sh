@@ -1,4 +1,38 @@
 #可参考https://jimmysong.io/kubernetes-handbook/practice/ceph-helm-install-guide-zh.html
+helm init --upgrade -i registry.cn-hangzhou.aliyuncs.com/google_containers/tiller:v2.9.0 --stable-repo-url https://kubernetes.oss-cn-hangzhou.aliyuncs.com/charts
+
+kubectl create clusterrolebinding add-on-cluster-admin --clusterrole=cluster-admin --serviceaccount=kube-system:default
+
+
+network:
+  public: 192.168.99.0/24
+  cluster: 192.168.99.0/24
+
+osd_devices:
+  - name: disk1
+    device: /disk/d1
+    zap: "1"
+  - name: disk2
+    device: /disk/d2
+    zap: "1"
+
+storageclass:
+  name: ceph-rbd
+  pool: rbd
+  user_id: k8s
+  
+  
+# depending images
+docker pull docker.io/kolla/ubuntu-source-heat-engine:3.0.3
+docker pull docker.io/kolla/ubuntu-source-heat-engine:3.0.3
+docker pull docker.io/kolla/ubuntu-source-heat-engine:3.0.3
+docker pull docker.io/ceph/daemon:tag-build-master-luminous-ubuntu-16.04
+docker pull docker.io/kolla/ubuntu-source-kubernetes-entrypoint:4.0.0
+docker pull docker.io/ceph/daemon:tag-build-master-luminous-ubuntu-16.04
+docker pull docker.io/port/ceph-config-helper:v1.7.5
+docker pull quay.io/external_storage/rbd-provisioner:v0.1.1
+docker pull docker.io/alpine:latest
+
 
 #测试时使用模拟磁盘
 
@@ -52,7 +86,6 @@ rm -rf /var/lib/ceph/*
 rm -rf /var/log/ceph/*
 rm -rf /var/run/ceph/*
 rm -rf /var/lib/ceph-helm/*
-
 
 
 

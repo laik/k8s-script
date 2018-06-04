@@ -129,7 +129,7 @@ ceph-deploy osd prepare master1:/u06 master2:/u06
 
 ceph-deploy osd activate master1:/u06 master2:/u06
 
-
+#---------------------------------------------------------------------------
 
 # As a first exercise, create a Ceph Storage Cluster with one Ceph Monitor and three Ceph OSD Daemons. Once the cluster reaches a active + clean state, expand it by adding a fourth Ceph OSD Daemon, a Metadata Server and two more Ceph Monitors. For best results, create a directory on your admin node for maintaining the configuration files and keys that ceph-deploy generates for your cluster.
 # 作为第一个练习，使用一个Ceph Monitor和三个Ceph OSD守护进程创建一个Ceph存储集群。 一旦集群达到 active+clean 状态，
