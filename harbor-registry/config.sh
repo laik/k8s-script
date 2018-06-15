@@ -48,7 +48,7 @@ auth:
 3、停止harbor，重新启动并生成配置文件：
 
 #docker-compose stop
-# ./install.sh
+#./install.sh
  
 
 4、修改docker启动文件，设置信任的主机与端口：
