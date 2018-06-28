@@ -1,0 +1,57 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  # 名字小写
+  #Error from server (Invalid): error when creating "configmap-file-pod.yaml": 
+  #ConfigMap "etransConfigMap" is invalid: metadata.name: Invalid value: "etransConfigMap": 
+  #a DNS-1123 subdomain must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character (e.g. 'example.com', regex used for validation is '[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*')
+  name: etrans-config-map
+
+data:
+  key-rawserveryaml: |-
+    profile:
+    - app: kafka-raw-saver
+      type: kafka
+      context:
+       url: 10.10.3.19:9092
+       groupid: rawdsadsadsadsdsadsa
+       topic: "RAW-DN,RAW-UC,RAW-UI,RAW-EV"
+       tmpdir: /mnt/z/newenergy
+       parse: version55
+
+    - app: greenplum-raw-loader
+      type: greenplum
+      context:
+       url: postgres://gpadmin:gpadmin@192.168.5.251/default_raw?sslmode=disable
+       dns: postgres
+       db: raw
+       tmpdir: /mnt/z/newenergy
+       parse: version55
+       remote: no
+       maxidle: 10
+       maxconn: 100
+     
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: dapi-test-pod
+spec:
+  containers:
+    - name: test-container
+      image: busybox
+      command: [ "/bin/sh", "-c", "ls /etc/config/ && more /etc/config/appcontext.yaml" ]
+      volumeMounts:
+      - name: config-volume
+        mountPath: /etc/config
+  volumes:
+    - name: config-volume
+      configMap:
+        # Provide the name of the ConfigMap containing the files you want
+        # to add to the container
+        name: etrans-config-map
+        items:
+        - key: key-rawserveryaml
+          path: appcontext.yaml
+  restartPolicy: Never

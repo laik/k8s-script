@@ -285,6 +285,17 @@ ceph osd tree
 # 获取key base64 
 ceph auth get-key client.admin | base64
 
+
+
+
+
+
+# client install
+yum install ceph-common.x86_64 -y
+
+# ceph master 授权
+# ceph-deploy admin ${ip}
+
 apiVersion: v1
 kind: Secret
 metadata:
