@@ -34,3 +34,7 @@ kubectl logs --namespace=kube-system $(kubectl get pods --namespace=kube-system 
 
 # 默认情况下，为了保证master的安全，master是不会被调度到app的。你可以取消这个限制通过输入：
 kubectl taint nodes --all node-role.kubernetes.io/master-
+
+
+# 标记机器
+kubectl label node kubenode1 zone=developer

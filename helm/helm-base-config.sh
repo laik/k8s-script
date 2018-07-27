@@ -4,3 +4,9 @@ helm install --name etrans --set mysqlRootPassword=rootplatform,mysqlUser=dxp,my
 
 #postgresql
 helm install --name-template etrans-greenplum --set postgresUser=gpadmin,postgresPassword=gpadmin,postgresDatabase=default_raw,service.type=NodePort,persistence.size=20Gi stable/postgresql
+
+
+
+
+# upgrade
+helm upgrade -f ./mysql/values.yaml gps-web-mysql ./mysql
