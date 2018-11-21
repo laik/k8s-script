@@ -94,15 +94,16 @@ sed -i 's/192.168.0.0/10.244.0.0/g' calico.yaml
 
 kubectl create -f calico.yaml
 ```
-#heapster
+
+# heapster
 kubectl create -f https://raw.githubusercontent.com/laik/k8s-script/master/cluster-configure/heapster-all.yaml
 
-#dashboard
+# dashboard
 kubectl create -f https://raw.githubusercontent.com/laik/k8s-script/master/cluster-configure/kubernetes-dashboard.yaml
 
-#获取token,通过令牌登陆
+# 获取token,通过令牌登陆
 kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep admin-user | awk '{print $1}')
-```
+
 
 
 
