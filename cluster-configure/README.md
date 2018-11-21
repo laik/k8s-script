@@ -70,19 +70,16 @@ kubeadm init --config kubeadm-init-config.yaml
 ```
 export KUBECONFIG=/etc/kubernetes/admin.conf && echo "export KUBECONFIG=/etc/kubernetes/admin.conf" >> ~/.bashrc
 ```
-
 # 默认情况下，为了保证master的安全，master是不会被调度到app的。你可以取消这个限制通过输入：
 ```
 kubectl taint nodes --all node-role.kubernetes.io/master-
 ```
-
 
 # 以下操作只在kubem1操作
 # ------------------------------------
 # 以下两个网络组件可以选择一个安装,或者两个都安装
 需要注意 初始化的网段,每个cni组件支持的网络不一样(我这里使用192.168.0.0/16 - clico 组件支持)
 参考: https://kubernetes.io/docs/setup/independent/create-cluster-kubeadm/#pod-network
-
 ```
 ## 用 Calico 作为网络传输层
 
@@ -123,3 +120,7 @@ wget https://raw.githubusercontent.com/laik/k8s-script/master/cluster-configure/
 sh kubeadm-init-config.sh
 kubeadm init --config kubeadm-init-config.yaml
 ```
+
+
+# 包含 CA 的基于 Token 的发现
+kubeadm token create --print-join-command

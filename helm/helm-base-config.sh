@@ -10,3 +10,7 @@ helm install --name-template etrans-greenplum --set postgresUser=gpadmin,postgre
 
 # upgrade
 helm upgrade -f ./mysql/values.yaml gps-web-mysql ./mysql
+
+
+
+helm install --name saturn-db -f ./mysql/values.yaml stable/mysql
