@@ -17,7 +17,7 @@ etcd:
   dataDir: /var/lib/etcd
   apiserver-count: ${MASTER_COUNT}
 networking:
-  podSubnet: 192.168.0.0/16
+  podSubnet: 10.244.0.0/16
 kubernetesVersion: 1.10.1
 api:
   advertiseAddress: "${PRIVATE_IP}"

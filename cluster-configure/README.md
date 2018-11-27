@@ -125,3 +125,9 @@ kubeadm init --config kubeadm-init-config.yaml
 
 # 包含 CA 的基于 Token 的发现
 kubeadm token create --print-join-command
+
+# kubectl proxy
+```
+kubectl proxy --address='0.0.0.0'  --accept-hosts='^*$'
+curl -X GET -L http://14.29.231.232:8001/
+```
