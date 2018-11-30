@@ -23,9 +23,9 @@ kubectl patch pv pvc-210e2481-62ec-11e8-881e-5254005f9478 -p '{"spec":{"persiste
 
 
 # 清空 etcd
-清空etcd给大家分享一下：kubeadm reset之后，并不会清除etcd里的内容，要清除，需要手工执行
-$etcdctl del "" --prefix
-命令，但默认etcdctl的API是v2的，无法执行，需要导出环境变量 export ETCDCTL_API=3，然后再执行 etcdctl  del "" —prefix即可成功
+清空etcd给大家分享一下：kubeadm reset之后，并不会清除etcd里的内容，要清除，需要手工执行命令，但默认etcdctl的API是v2的，无法执行，需要导出环境变量 export ETCDCTL_API=3，然后再执行 etcdctl  del "" —prefix即可成功
+etcdctl del "" --prefix
+
 
 
 # log
@@ -38,3 +38,7 @@ kubectl taint nodes --all node-role.kubernetes.io/master-
 
 # 标记机器
 kubectl label node kubenode1 zone=developer
+
+# 驱逐节点
+kubectl drain node4 --delete-local-data --force --ignore-daemonsets
+kubectl delete node node4

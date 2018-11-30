@@ -51,5 +51,5 @@ etcdctl --cert-file=/etc/kubernetes/pki/etcd/etcd.pem  --key-file=/etc/kubernete
 # or 声明了ectdctl api =3 需要清除才能用kubeadm init 不然会有一系列想像不到的后果
 export ETCDCTL_API=3
 etcdctl --cert=/etc/kubernetes/pki/etcd/etcd.pem  --key=/etc/kubernetes/pki/etcd/etcd-key.pem --cacert=/etc/kubernetes/pki/etcd/ca.pem --endpoints=[${KUBEM1_IP}:2379,${KUBEM2_IP}:2379,${KUBEM3_IP}:2379] member list
-
+etcdctl --cert=/etc/kubernetes/pki/etcd/etcd.pem  --key=/etc/kubernetes/pki/etcd/etcd-key.pem --cacert=/etc/kubernetes/pki/etcd/ca.pem --endpoints=[${KUBEM1_IP}:2379,${KUBEM2_IP}:2379,${KUBEM3_IP}:2379] del "" --prefix
 etcdctl --cert=/etc/kubernetes/pki/etcd/etcd.pem  --key=/etc/kubernetes/pki/etcd/etcd-key.pem --cacert=/etc/kubernetes/pki/etcd/ca.pem --endpoints=[${KUBEM1_IP}:2379,${KUBEM2_IP}:2379,${KUBEM3_IP}:2379] get /registry/services --prefix -w json|python -m json.tool

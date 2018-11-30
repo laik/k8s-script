@@ -3,17 +3,14 @@ helm init --upgrade -i registry.cn-hangzhou.aliyuncs.com/google_containers/tille
 
 kubectl create clusterrolebinding add-on-cluster-admin --clusterrole=cluster-admin --serviceaccount=kube-system:default
 
-
+cat > ~/ceph-overrides.yaml
 network:
-  public: 192.168.99.0/24
-  cluster: 192.168.99.0/24
+  public: 10.10.0.0/24
+  cluster: 110.10.0.0/24
 
 osd_devices:
   - name: disk1
-    device: /disk/d1
-    zap: "1"
-  - name: disk2
-    device: /disk/d2
+    device: /docker/ceph
     zap: "1"
 
 storageclass:

@@ -253,3 +253,12 @@
 >>> iptables --flush && iptables -tnat --flush
 >>> systemctl start kubelet && systemctl start docker
 >>> ```
+
+
+
+#### fatal: parameter inet_interfaces: no local interface found for ::1
+```
+sed -i 's/inet_interfaces = localhost/inet_protocols = all/g' /etc/postfix/main.cf
+grep inet_protocols /etc/postfix/main.cf
+service postfix start
+```
