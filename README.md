@@ -36,7 +36,20 @@ sudo sh -c  "echo '#
 ' >> /etc/hosts"
 
 yum install -y wget 
+
 wget -O centos7-setting.sh https://raw.githubusercontent.com/laik/k8s-script/master/centos7-setting.sh && sh centos7-setting.sh
+
+wget -O docker-ce.sh https://raw.githubusercontent.com/laik/k8s-script/master/docker-ce.sh && sh docker-ce.sh
+
+wget -O kubelet.sh https://raw.githubusercontent.com/laik/k8s-script/master/kubelet.sh && sh kubelet.sh
+
+echo "执行下载镜像脚本"
+MY_PASSWORD=SASE!@#!#!RDA
+docker login --username=etransk8s --password=${MY_PASSWORD} registry.cn-hangzhou.aliyuncs.com
+
+wget -O k8s-dev.sh https://raw.githubusercontent.com/laik/k8s-script/master/k8s-dev.sh && chmod +x k8s-dev.sh && sh k8s-dev.sh && cd ~
+
+
 
 ```
 
