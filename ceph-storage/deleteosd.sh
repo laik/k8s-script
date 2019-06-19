@@ -9,9 +9,13 @@
 /etc/init.d/ceph stop osd.0
 这一步是停止osd的进程，让其他的osd知道这个节点不提供服务了
 
+
 将节点状态标记为out
 ceph osd out osd.0
 这个一步是告诉mon，这个节点已经不能服务了，需要在其他的osd上进行数据的恢复了
+
+将节点down 
+ceph osd down osd.0
 
 从crush中移除节点
 ceph osd crush remove osd.0

@@ -42,9 +42,6 @@ echo "增加DNS"
 cat > /etc/resolv.conf << EOF
 nameserver 114.114.114.114
 nameserver 202.96.128.66
-nameserver 202.96.128.166
-nameserver 1.1.1.1
-nameserver 1.0.0.1
 EOF
 
 echo "在RHEL/CentOS 7 系统上可能会路由失败,添加配置"

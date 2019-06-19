@@ -22,7 +22,8 @@ Harbor使用 -- 修改80端口
  8       - ./common/config/nginx:/etc/nginx
  9     ports:
 10       - 1180:80
-11       - 1143:443
+11       - 443:443
+	     - 4443:4443
 12     depends_on:
 13       - mysql
 14       - registry

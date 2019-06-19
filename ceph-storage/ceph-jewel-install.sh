@@ -3,7 +3,7 @@
 # 红帽包管理工具（RPM）¶  安装 Ceph
 sudo yum install -y yum-utils && sudo yum-config-manager --add-repo https://dl.fedoraproject.org/pub/epel/7/x86_64/ && sudo yum install --nogpgcheck -y epel-release && sudo rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7 && sudo rm /etc/yum.repos.d/dl.fedoraproject.org*
 
-sudo yum update && sudo yum install ceph-deploy  ntp ntpdate ntp-doc -y
+sudo yum install ceph-deploy  ntp ntpdate ntp-doc -y
 
 
 # 优先级/首选项 确保你的包管理器安装了优先级/首选项包且已启用。在 CentOS 上你也许得安装 EPEL ，在 RHEL 上你也许得启用可选软件库。
@@ -63,13 +63,9 @@ export CEPH_DEPLOY_GPG_URL=http://hk.ceph.com/keys/release.asc
 EOF
 
 # add dns
-cat >> /etc/resolv.conf<<EOF
+cat > /etc/resolv.conf<<EOF
 nameserver 202.96.128.166
 nameserver 202.96.128.66
-nameserver 1.1.1.1
-nameserver 1.0.0.1
-nameserver 8.8.8.8
-nameserver 4.4.4.4
 EOF
 
 # add cephnode user /*当然,我是用 root 来搞的*/
@@ -114,7 +110,7 @@ rm -rf /var/run/ceph/*
 前提:
 将 /u06目录授权
 chown -R 777 /u06
-chown -R ceph:ceph /u06
+chown -R cephnode:cephnode /u06
 ----
 ceph-deploy new master1 master2 --public_network-network=192.168.4.0/24 --cluster-network=172.16.171.0/24 --repo-url=http://mirrors.aliyun.com/ceph/rpm-jewel/el7/
 

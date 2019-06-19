@@ -52,8 +52,9 @@ docker login --username=etransk8s --password=123456 registry.cn-hangzhou.aliyunc
 wget -O k8s-dev.sh https://raw.githubusercontent.com/laik/k8s-script/master/k8s-dev.sh && chmod +x k8s-dev.sh && sh k8s-dev.sh && cd ~
 
 # centos7.4 kube-v1.10.1 cni 问题 Container runtime network not ready: NetworkReady=false reason:NetworkPluginNotReady message:docker: network plugin is not ready: cni config uninitialized
+# discard
+# sed -i 's/.*cni.*/#&/g' /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
 
-sed -i 's/.*cni.*/#&/g' /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
 
 # 初始化获取当前版本(下面已经指定版本了)
 curl https://storage.googleapis.com/kubernetes-release/release/stable-1.10.txt
