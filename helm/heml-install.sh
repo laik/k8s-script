@@ -6,6 +6,7 @@ Unpack it (tar -zxvf helm-v2.0.0-linux-amd64.tgz)
 Find the helm binary in the unpacked directory, and move it to its desired destination (mv linux-amd64/helm /usr/local/bin/helm)
 
 
+wget https://get.helm.sh/helm-v2.14.1-linux-amd64.tar.gz
 
 helm init --upgrade -i registry.cn-hangzhou.aliyuncs.com/google_containers/tiller:v2.11.0 --stable-repo-url https://kubernetes.oss-cn-hangzhou.aliyuncs.com/charts
 

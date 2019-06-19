@@ -21,9 +21,10 @@ wget -O docker-ce.sh https://raw.githubusercontent.com/laik/k8s-script/master/do
 wget -O kubelet.sh https://raw.githubusercontent.com/laik/k8s-script/master/kubelet.sh && sh kubelet.sh
 
 echo "执行下载镜像脚本"
+```
 MY_PASSWORD=SASE!@#!#!RDA
 docker login --username=etransk8s --password=${MY_PASSWORD} registry.cn-hangzhou.aliyuncs.com
-
+```
 wget -O k8s-dev.sh https://raw.githubusercontent.com/laik/k8s-script/master/k8s-dev.sh && chmod +x k8s-dev.sh && sh k8s-dev.sh && cd ~
 
 

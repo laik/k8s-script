@@ -90,7 +90,6 @@ export KUBECONFIG=/etc/kubernetes/admin.conf && echo "export KUBECONFIG=/etc/kub
 接下来要注意，我们必须自己来安装一个network addon。network addon必须在任何app部署之前安装好。同样的，kube-dns也会在network addon安装好之后才启动 kubeadm只支持CNI-based networks（不支持kubenet）。比较常见的network addon有：Calico, Canal, Flannel, Kube-router, Romana, Weave Net等。这里我们使用Calico。
 
 # 以下两个网络组件可以选择一个安装
-
 ## 用 weave net 安装方法
 export kubever=$(kubectl version | base64 | tr -d '\n')
 kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$kubever"
@@ -101,7 +100,7 @@ kubectl apply -f https://raw.githubusercontent.com/laik/k8s-script/master/calico
 systemctl restart docker && systemctl restart kubelet
 
 # dashboard
-kubectl apply -f https://raw.githubusercontent.com/laik/k8s-script/master/kubernetes-dashboard.yaml
+kubectl create -f https://raw.githubusercontent.com/laik/k8s-script/master/cluster-configure/kubernetes-dashboard.yaml
 kubectl proxy
 
 # heapster 安装(需要改成集群信息配置[暂时不安装])
@@ -117,6 +116,11 @@ type: NodePort
 kubectl apply -f https://raw.githubusercontent.com/laik/k8s-script/master/kube-dashboard-access.yaml
 
 然后就可以以主机 ip:端口的方式访问啦!
+
+
+# 获取token,通过令牌登陆
+kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep admin-user | awk '{print $1}')
+
 
 Done!!! 
 
